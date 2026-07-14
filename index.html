@@ -1,0 +1,1536 @@
+<title>שכנים־שכנים · קהילת הבניין בשגרה ובחירום</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+/* ===== מערכת עיצוב ===== */
+:root{
+  --page-bg:#E8EDF1; --page-ink:#3A4A5A;
+  --bg:#F4F7F9; --surface:#FFFFFF; --surface-2:#EDF1F5;
+  --ink:#18293B; --ink-2:#4A5B6C; --ink-3:#7C8A98;
+  --line:#DCE3E9;
+  --blue:#2D5FA8; --blue-soft:#E3ECF7; --blue-ink:#1E4478;
+  --green:#2E8540; --green-soft:#E2F1E5; --green-ink:#1F5E2D;
+  --orange:#C96A12; --orange-soft:#FBEBDB; --orange-ink:#8F4A0A;
+  --red:#BE2E2E; --red-soft:#F9E4E4; --red-ink:#8C1F1F;
+  --gray:#8A939E; --gray-soft:#EDEFF2;
+  --radius:14px; --radius-s:10px;
+  --shadow:0 1px 3px rgba(24,41,59,.08),0 6px 20px rgba(24,41,59,.06);
+  --font:"Assistant","Heebo","Rubik","Noto Sans Hebrew","Segoe UI",system-ui,-apple-system,"Arial Hebrew",Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --page-bg:#131A21; --page-ink:#93A3B3; }
+}
+:root[data-theme="dark"]{ --page-bg:#131A21; --page-ink:#93A3B3; }
+:root[data-theme="light"]{ --page-bg:#E8EDF1; --page-ink:#3A4A5A; }
+
+*{box-sizing:border-box; margin:0; padding:0;}
+html,body{height:100%;}
+body{
+  background:var(--page-bg); color:var(--page-ink);
+  font-family:var(--font); font-size:16px; line-height:1.55;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  min-height:100dvh; padding:0;
+}
+.page-caption{font-size:13px; letter-spacing:.06em; margin:14px 0 10px; text-align:center;}
+.page-caption b{font-weight:700;}
+
+/* מסגרת המכשיר */
+#device{
+  width:100%; max-width:430px; height:100dvh; max-height:100dvh;
+  background:var(--bg); color:var(--ink);
+  display:flex; flex-direction:column; overflow:hidden; position:relative;
+  direction:rtl; text-align:right;
+}
+@media (min-width:520px){
+  body{padding:20px 12px;}
+  #device{
+    height:min(880px, calc(100dvh - 90px));
+    border-radius:34px; box-shadow:0 24px 70px rgba(10,20,30,.35);
+    border:1px solid rgba(120,140,160,.25);
+  }
+}
+@media (max-width:519.9px){ .page-caption{display:none;} }
+
+/* אזורי המסך */
+#banner{flex:none;}
+#screen{flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:20px 18px 24px; scroll-behavior:smooth;}
+#nav{flex:none;}
+
+h1{font-size:26px; font-weight:800; line-height:1.25; text-wrap:balance;}
+h2{font-size:20px; font-weight:700; line-height:1.3;}
+h3{font-size:17px; font-weight:700;}
+.sub{color:var(--ink-2); font-size:15px;}
+.small{color:var(--ink-3); font-size:13px;}
+.eyebrow{font-size:12px; font-weight:700; letter-spacing:.08em; color:var(--ink-3);}
+
+/* כרטיסים */
+.card{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:16px; box-shadow:var(--shadow);}
+.stack{display:flex; flex-direction:column; gap:12px;}
+.stack-lg{display:flex; flex-direction:column; gap:18px;}
+.row{display:flex; align-items:center; gap:10px;}
+.row-between{display:flex; align-items:center; justify-content:space-between; gap:10px;}
+.grid2{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+
+/* כפתורים */
+button{font-family:inherit; font-size:16px; cursor:pointer; border:none; background:none; color:inherit; text-align:right;}
+.btn{
+  display:flex; align-items:center; justify-content:center; gap:10px;
+  min-height:52px; padding:12px 20px; border-radius:var(--radius);
+  font-size:17px; font-weight:700; width:100%;
+  transition:transform .08s ease, filter .15s ease;
+}
+.btn:active{transform:scale(.985);}
+.btn-primary{background:var(--blue); color:#fff;}
+.btn-primary:hover{filter:brightness(1.07);}
+.btn-ghost{background:var(--surface); color:var(--blue-ink); border:1.5px solid var(--line);}
+.btn-quiet{background:none; color:var(--blue-ink); min-height:44px; font-size:15px; width:auto; padding:8px 12px;}
+.btn-green{background:var(--green); color:#fff;}
+.btn-orange{background:var(--orange); color:#fff;}
+.btn-red{background:var(--red); color:#fff;}
+.btn-big{min-height:76px; font-size:19px; border-radius:18px; flex-direction:column; gap:2px;}
+.btn-big .hint{font-size:13px; font-weight:400; opacity:.92;}
+.btn[disabled]{opacity:.45; cursor:default;}
+button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible{
+  outline:3px solid var(--blue); outline-offset:2px; border-radius:6px;
+}
+
+/* שדות */
+input,textarea,select{
+  font-family:inherit; font-size:17px; color:var(--ink);
+  width:100%; padding:13px 14px; border:1.5px solid var(--line); border-radius:var(--radius-s);
+  background:var(--surface); direction:rtl;
+}
+input::placeholder,textarea::placeholder{color:var(--ink-3);}
+label.fld{display:block; font-size:14px; font-weight:700; color:var(--ink-2); margin-bottom:6px;}
+
+/* צ'יפים */
+.chips{display:flex; flex-wrap:wrap; gap:8px;}
+.chip{
+  padding:9px 14px; border-radius:999px; border:1.5px solid var(--line);
+  background:var(--surface); font-size:14px; font-weight:600; color:var(--ink-2);
+}
+.chip.on{background:var(--blue-soft); border-color:var(--blue); color:var(--blue-ink);}
+.tag{display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:999px; font-size:12.5px; font-weight:700;}
+.tag-blue{background:var(--blue-soft); color:var(--blue-ink);}
+.tag-green{background:var(--green-soft); color:var(--green-ink);}
+.tag-orange{background:var(--orange-soft); color:var(--orange-ink);}
+.tag-red{background:var(--red-soft); color:var(--red-ink);}
+.tag-gray{background:var(--gray-soft); color:var(--ink-2);}
+
+/* ניווט תחתון */
+#nav{
+  display:flex; background:var(--surface); border-top:1px solid var(--line);
+  padding:6px 4px calc(8px + env(safe-area-inset-bottom));
+}
+#nav button{
+  flex:1; display:flex; flex-direction:column; align-items:center; gap:3px;
+  padding:7px 2px; font-size:11.5px; font-weight:700; color:var(--ink-3); border-radius:10px;
+}
+#nav button.on{color:var(--blue-ink);}
+#nav button.on .nicon{background:var(--blue-soft);}
+#nav.nav-emg button.on{color:var(--red-ink);}
+#nav.nav-emg button.on .nicon{background:var(--red-soft);}
+.nicon{width:44px; height:28px; border-radius:999px; display:flex; align-items:center; justify-content:center;}
+.nicon svg{width:21px; height:21px;}
+
+/* באנר חירום */
+.emg-banner{
+  background:var(--red); color:#fff; padding:10px 16px;
+  display:flex; align-items:center; gap:10px; font-weight:700; font-size:14.5px;
+}
+.emg-banner .dot{width:9px; height:9px; border-radius:50%; background:#fff; animation:pulse 1.6s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.35;}}
+.drill-banner{background:var(--orange);}
+
+/* התראות toast */
+#toast{
+  position:absolute; bottom:92px; right:16px; left:16px; z-index:60;
+  background:var(--ink); color:#fff; padding:13px 16px; border-radius:12px;
+  font-size:15px; font-weight:600; box-shadow:var(--shadow);
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  opacity:0; transform:translateY(8px); pointer-events:none;
+  transition:opacity .25s ease, transform .25s ease;
+}
+#toast.show{opacity:1; transform:none; pointer-events:auto;}
+#toast button{color:#9CC4F5; font-weight:700; font-size:15px; flex:none;}
+
+/* מודאל */
+#modal-wrap{
+  position:absolute; inset:0; z-index:50; display:none;
+  background:rgba(14,24,34,.5); align-items:flex-end; justify-content:center;
+}
+#modal-wrap.open{display:flex;}
+#modal{
+  background:var(--bg); width:100%; max-height:86%;
+  border-radius:22px 22px 0 0; padding:20px 18px calc(20px + env(safe-area-inset-bottom));
+  overflow-y:auto; direction:rtl; text-align:right;
+  animation:slideUp .22s ease;
+}
+@keyframes slideUp{from{transform:translateY(30px); opacity:.4;} to{transform:none; opacity:1;}}
+.modal-handle{width:44px; height:5px; border-radius:99px; background:var(--line); margin:0 auto 14px;}
+
+/* מפת בניין */
+.bmap{display:grid; grid-template-columns:repeat(3,1fr); gap:9px;}
+.bapt{
+  border-radius:12px; padding:10px 8px; text-align:center; border:1.5px solid transparent;
+  display:flex; flex-direction:column; gap:3px; align-items:center; font-weight:700;
+}
+.bapt .num{font-size:17px;}
+.bapt .st{font-size:11px; font-weight:700;}
+.st-ok{background:var(--green-soft); color:var(--green-ink); border-color:#BBDCC2;}
+.st-help{background:var(--orange-soft); color:var(--orange-ink); border-color:#EFCFA8;}
+.st-danger{background:var(--red-soft); color:var(--red-ink); border-color:#EDBBBB;}
+.st-none{background:var(--gray-soft); color:var(--ink-2); border-color:var(--line);}
+.st-away{background:var(--blue-soft); color:var(--blue-ink); border-color:#BFD4EE;}
+.floor-label{grid-column:1/-1; font-size:12px; font-weight:700; color:var(--ink-3); margin-top:4px;}
+
+/* מונים */
+.counters{display:grid; grid-template-columns:repeat(3,1fr); gap:9px;}
+.counter{border-radius:12px; padding:10px 6px; text-align:center;}
+.counter .n{font-size:24px; font-weight:800; font-variant-numeric:tabular-nums; line-height:1.1;}
+.counter .t{font-size:12px; font-weight:700;}
+
+/* פס התקדמות */
+.progress{height:7px; background:var(--surface-2); border-radius:99px; overflow:hidden;}
+.progress > div{height:100%; background:var(--blue); border-radius:99px; transition:width .3s ease;}
+
+/* פיד */
+.post .meta{display:flex; align-items:center; gap:8px; margin-bottom:8px;}
+.avatar{
+  width:40px; height:40px; border-radius:50%; flex:none;
+  background:var(--blue-soft); color:var(--blue-ink);
+  display:flex; align-items:center; justify-content:center; font-weight:800; font-size:15px;
+}
+.divider{height:1px; background:var(--line); margin:4px 0;}
+
+.icon{width:22px;height:22px;flex:none;}
+.icon-lg{width:30px;height:30px;flex:none;}
+
+/* שלבי אונבורדינג */
+.steps-dots{display:flex; gap:5px;}
+.steps-dots i{width:8px;height:8px;border-radius:50%;background:var(--line);}
+.steps-dots i.on{background:var(--blue); width:22px; border-radius:99px;}
+
+.qa-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+.qa{
+  background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+  padding:14px 12px; display:flex; flex-direction:column; align-items:flex-start; gap:8px;
+  font-weight:700; font-size:14.5px; color:var(--ink); box-shadow:var(--shadow); width:100%;
+}
+.qa .qicon{width:38px;height:38px;border-radius:11px;background:var(--blue-soft);color:var(--blue-ink);display:flex;align-items:center;justify-content:center;}
+
+.list-item{display:flex; align-items:center; gap:12px; padding:13px 4px; width:100%;}
+.list-item + .list-item{border-top:1px solid var(--line);}
+
+.center{text-align:center; align-items:center;}
+.mt-auto{margin-top:auto;}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation:none !important; transition:none !important;}
+}
+</style>
+
+<div class="page-caption"><b>שכנים־שכנים</b> · אבטיפוס אינטראקטיבי — נגן את התרחיש: הצטרפות → שגרה → תרגיל חירום → סיכום</div>
+<div id="device" lang="he" dir="rtl">
+  <div id="banner"></div>
+  <main id="screen" tabindex="-1"></main>
+  <nav id="nav" aria-label="ניווט ראשי"></nav>
+  <div id="toast" role="status"></div>
+  <div id="modal-wrap"><div id="modal" role="dialog" aria-modal="true"></div></div>
+</div>
+
+<script>
+/* ============ אייקונים (SVG) ============ */
+const I = {
+  home:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/></svg>',
+  people:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="8" r="3.2"/><path d="M2.8 20c.6-3.4 3.2-5 6.2-5s5.6 1.6 6.2 5"/><circle cx="17" cy="9" r="2.4"/><path d="M16.4 15.2c2.4.3 4.2 1.7 4.8 4.3"/></svg>',
+  box:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3 21 7.5v9L12 21l-9-4.5v-9L12 3z"/><path d="M3 7.5 12 12l9-4.5"/><path d="M12 12v9"/></svg>',
+  tasks:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3.5" width="16" height="17" rx="3"/><path d="m8.5 12 2.4 2.4 4.8-5"/></svg>',
+  user:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 20.5c.9-4 4-5.8 7.5-5.8s6.6 1.8 7.5 5.8"/></svg>',
+  alert:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5 22 20H2L12 3.5z"/><path d="M12 10v4.5"/><circle cx="12" cy="17.2" r=".4" fill="currentColor"/></svg>',
+  check:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>',
+  hand:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 11.5V6.2a1.6 1.6 0 0 1 3.2 0V11m0-6.3V4a1.6 1.6 0 0 1 3.2 0v7m0-5.7a1.6 1.6 0 0 1 3.2 0V13"/><path d="M16.6 12.8a1.6 1.6 0 0 1 3 .9c-.6 2.4-1.1 4.3-2.3 5.8-1.2 1.6-3 2.5-5.4 2.5-4 0-5.4-2.6-7.6-7.1a1.5 1.5 0 0 1 2.5-1.6L8.5 15"/></svg>',
+  bell:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9.5a6 6 0 0 1 12 0c0 4 1.5 5.5 1.5 5.5h-15S6 13.5 6 9.5z"/><path d="M10 18.5a2.2 2.2 0 0 0 4 0"/></svg>',
+  shield:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3c3 1.6 5.5 2.3 8 2.5 0 8-2.7 13-8 15.5C6.7 18.5 4 13.5 4 5.5 6.5 5.3 9 4.6 12 3z"/></svg>',
+  search:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6"/><path d="m15.5 15.5 5 5"/></svg>',
+  phone:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l1.5 4.5L8 10a12 12 0 0 0 6 6l1.5-2.5L20 15v4a1.5 1.5 0 0 1-1.7 1.5C10 19.6 4.4 14 3.5 5.7A1.5 1.5 0 0 1 5 4z"/></svg>',
+  msg:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 5.5h16v11H10l-4.5 3.5v-3.5H4v-11z"/></svg>',
+  wrench:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 6.5a4 4 0 0 0-5.3 5L4 16.7 7.3 20l5.2-5.2a4 4 0 0 0 5-5.3L14.7 12l-2.7-2.7 2.5-2.8z"/></svg>',
+  car:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13 6.5 8a2 2 0 0 1 2-1.5h7A2 2 0 0 1 17.5 8L19 13"/><rect x="4" y="13" width="16" height="5" rx="1.5"/><circle cx="7.5" cy="18.5" r="1.5"/><circle cx="16.5" cy="18.5" r="1.5"/></svg>',
+  cal:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="5" width="16" height="15" rx="2.5"/><path d="M4 10h16M9 3.5V6.5M15 3.5V6.5"/></svg>',
+  heart:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 20c-5.5-3.5-8.5-6.8-8.5-10A4.4 4.4 0 0 1 12 7.6 4.4 4.4 0 0 1 20.5 10c0 3.2-3 6.5-8.5 10z"/></svg>',
+  back:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m10 6-6 6 6 6M4.5 12H20"/></svg>',
+  send:'<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M21 3 3 10.5l7 2.5 2.5 7L21 3z"/><path d="M10 13 21 3"/></svg>',
+};
+const IL = n => I[n].replace('class="icon"','class="icon-lg"');
+
+/* ============ נתוני דמה ============ */
+const BUILDING = 'הגפן 12, גבעתיים';
+const APTS = [
+  {n:1, floor:1, name:'משפחת פרץ',        people:2, note:'זוג ותיק בבניין', skills:[], equip:[], needs:''},
+  {n:2, floor:1, name:'דנה ואוהד לוי',     people:4, note:'שני ילדים קטנים', skills:['טיפול בילדים'], equip:[], needs:''},
+  {n:3, floor:1, name:'יוסי אברהם',        people:1, note:'חובש מד״א מתנדב', skills:['עזרה ראשונה'], equip:['ערכת עזרה ראשונה'], needs:''},
+  {n:4, floor:2, name:'משפחת כהן',         people:3, note:'', skills:['בישול'], equip:[], needs:''},
+  {n:5, floor:2, name:'תמר אשכנזי',        people:1, note:'פסיכולוגית קלינית', skills:['תמיכה רגשית'], equip:[], needs:''},
+  {n:6, floor:2, name:'רחל גולן',          people:1, note:'', skills:[], equip:[], needs:'קשיי ניידות — זקוקה לסיוע בירידה במדרגות'},
+  {n:7, floor:3, name:'עמית ושירה מזרחי',  people:5, note:'', skills:['רכב זמין'], equip:['גנרטור נייד','מיכל מים 20 ל׳'], needs:''},
+  {n:8, floor:3, name:'נועה ברק',          people:2, note:'זו הדירה שלכם בהדגמה', skills:[], equip:[], needs:'', me:true},
+  {n:9, floor:3, name:'אלכס פורטנוי',      people:2, note:'חשמלאי מוסמך', skills:['חשמל ותיקונים','הרמה וסחיבה'], equip:['מקדחה','סולם'], needs:''},
+  {n:10,floor:4, name:'משפחת ביטון',       people:4, note:'', skills:['הרמה וסחיבה'], equip:['פנס תאורה חזק'], needs:''},
+  {n:11,floor:4, name:'מאיה ניסים',        people:2, note:'אחות בבית חולים', skills:['עזרה ראשונה'], equip:[], needs:''},
+  {n:12,floor:4, name:'משפחת נחום',        people:2, note:'בחו״ל החודש', skills:[], equip:[], needs:''},
+];
+const SKILLS_ALL = ['עזרה ראשונה','הרמה וסחיבה','חשמל ותיקונים','תמיכה רגשית','בישול','רכב זמין','טיפול בילדים'];
+const EQUIP_ALL  = ['ערכת עזרה ראשונה','גנרטור','מיכל מים','פנס תאורה','מקדחה','סולם','כיסא גלגלים'];
+
+const RESOURCES = [
+  {cat:'ציוד חירום', name:'גנרטור נייד', owner:'עמית ושירה מזרחי · דירה 7', avail:true},
+  {cat:'ציוד חירום', name:'מיכל מים 20 ליטר', owner:'עמית ושירה מזרחי · דירה 7', avail:true},
+  {cat:'ציוד חירום', name:'פנס תאורה חזק', owner:'משפחת ביטון · דירה 10', avail:true},
+  {cat:'ציוד רפואי', name:'ערכת עזרה ראשונה מלאה', owner:'יוסי אברהם · דירה 3', avail:true},
+  {cat:'כלי עבודה', name:'מקדחה + סט מקדחים', owner:'אלכס פורטנוי · דירה 9', avail:true},
+  {cat:'כלי עבודה', name:'סולם 3 מטר', owner:'אלכס פורטנוי · דירה 9', avail:false},
+  {cat:'ילדים', name:'לול מתקפל', owner:'דנה ואוהד לוי · דירה 2', avail:true},
+  {cat:'מטבח', name:'סיר ענק לאירועים', owner:'משפחת כהן · דירה 4', avail:true},
+];
+
+const seedPosts = () => [
+  {id:1, who:'ועד הבניין', apt:'', cat:'הודעה', catTag:'tag-blue', time:'לפני שעה', official:true,
+   text:'ביום שלישי הקרוב 8:00–10:00 תיערך בדיקה שנתית של מערכות הגז. נציג יעבור בין הדירות — נא לוודא שמישהו בבית.', act:'אישרתי, נהיה בבית', done:false},
+  {id:2, who:'דנה לוי', apt:'דירה 2', cat:'בקשת עזרה', catTag:'tag-orange', time:'לפני שעתיים',
+   text:'מחפשים בייביסיטר לשישי בערב לשני ילדים (4 ו־6). מישהו מהבניין פנוי או ממליץ?', act:'אני יכולה לעזור', done:false},
+  {id:3, who:'יוסי אברהם', apt:'דירה 3', cat:'השאלת ציוד', catTag:'tag-green', time:'לפני 4 שעות',
+   text:'קניתי ערכת עזרה ראשונה חדשה — הישנה (תקינה ומלאה) זמינה למי שרוצה לדירה. עדכנתי גם במשאבים.', act:'מעוניינת', done:false},
+  {id:4, who:'רחל גולן', apt:'דירה 6', cat:'המלצות', catTag:'tag-blue', time:'אתמול',
+   text:'מישהו מכיר טכנאי מזגנים אמין? המזגן בסלון מטפטף.', act:'יש לי המלצה', done:false,
+   replies:[{who:'מאיה ניסים', text:'יש לנו טכנאי מצוין מהשכונה — שלחתי לך את המספר בהודעה פרטית.'}]},
+  {id:5, who:'עמית מזרחי', apt:'דירה 7', cat:'טרמפים', catTag:'tag-gray', time:'אתמול',
+   text:'נוסע מחר בבוקר (7:30) לירושלים, חוזר ב־17:00. יש שני מקומות ברכב.', act:'מצטרפת', done:false},
+  {id:6, who:'ועד הבניין', apt:'', cat:'אירוע', catTag:'tag-blue', time:'לפני יומיים', official:true,
+   text:'מפגש דיירים בגינה ביום שישי ב־16:30 — היכרות, קפה ועוגה. נדבר גם על נוהל החירום החדש של הבניין.', act:'נגיע!', done:false},
+];
+
+/* ============ מצב האפליקציה ============ */
+let S;
+function freshState(){ return {
+  screen:'splash', prevTab:'home',
+  onb:{step:0, phone:'', name:'נועה ברק', apt:8, people:2, skills:[], equip:[], sharePhone:true, shareSkills:true},
+  joined:false, coordinator:false,
+  mode:'routine', drill:false, emgStart:null, emgName:'רעידת אדמה',
+  myStatus:null, // 'ok'|'help'|'danger'
+  helpDraft:{step:1, type:'', urg:'', text:'', people:1},
+  aptStatus:{}, // n -> ok/help/danger/away
+  posts:seedPosts(), nextPost:100,
+  requests:[], nextReq:1,
+  tasks:[], nextTask:1,
+  updates:[],
+  borrows:{}, prepared:2,
+  faults:[], nextFault:1,
+  eventLog:[], simTimers:[], rTimers:[], summary:null, lastSummary:null,
+  readyDone:{water:true, kit:true, meet:false, docs:false},
+};}
+S = freshState();
+
+const $screen = document.getElementById('screen');
+const $nav = document.getElementById('nav');
+const $banner = document.getElementById('banner');
+
+/* ============ עזרים ============ */
+const initials = n => n.trim().split(/\s+/).slice(0,2).map(w=>w[0]).join('');
+const nowHM = () => new Date().toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'});
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+let toastTimer=null, toastUndo=null;
+function toast(msg, undoFn){
+  const t = document.getElementById('toast');
+  toastUndo = undoFn||null;
+  t.innerHTML = `<span>${msg}</span>` + (undoFn?`<button onclick="doUndo()">ביטול</button>`:'');
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove('show'), undoFn?5000:2600);
+}
+function doUndo(){ if(toastUndo){toastUndo(); toastUndo=null;} document.getElementById('toast').classList.remove('show'); render(); }
+
+function openModal(html){ document.getElementById('modal').innerHTML = '<div class="modal-handle"></div>'+html; document.getElementById('modal-wrap').classList.add('open'); }
+function closeModal(){ document.getElementById('modal-wrap').classList.remove('open'); }
+document.getElementById('modal-wrap').addEventListener('click', e=>{ if(e.target.id==='modal-wrap') closeModal(); });
+
+function go(screen){ S.screen = screen; render(); $screen.scrollTop = 0; }
+
+const STATUS_META = {
+  ok:    {label:'בסדר',      cls:'st-ok',    tag:'tag-green',  icon:I.check},
+  help:  {label:'צריכים עזרה', cls:'st-help', tag:'tag-orange', icon:I.hand},
+  danger:{label:'מצוקה',     cls:'st-danger',tag:'tag-red',    icon:I.alert},
+  away:  {label:'לא בבניין',  cls:'st-away',  tag:'tag-blue',   icon:I.car},
+  none:  {label:'לא דיווחו',  cls:'st-none',  tag:'tag-gray',   icon:I.bell},
+};
+const stOf = n => S.aptStatus[n] || 'none';
+
+/* ============ רינדור ראשי ============ */
+function render(){
+  renderBanner();
+  renderNav();
+  const fn = SCREENS[S.screen] || SCREENS.home;
+  $screen.innerHTML = fn();
+}
+
+function renderBanner(){
+  if(S.mode!=='emergency'){ $banner.innerHTML=''; return; }
+  const drill = S.drill ? ' drill-banner':'';
+  const drillTxt = S.drill ? ' · תרגיל' : '';
+  $banner.innerHTML = `<div class="emg-banner${drill}" role="alert">
+    <span class="dot" aria-hidden="true"></span>
+    <span style="flex:1">מצב חירום פעיל · ${esc(S.emgName)}${drillTxt} · הופעל ב־${S.emgStart}</span>
+  </div>`;
+}
+
+const NAV_ROUTINE = [
+  {id:'home', label:'בית', icon:'home'},
+  {id:'community', label:'קהילה', icon:'people'},
+  {id:'resources', label:'משאבים', icon:'box'},
+  {id:'tasks', label:'משימות', icon:'tasks'},
+  {id:'profile', label:'פרופיל', icon:'user'},
+];
+const NAV_EMG = [
+  {id:'estatus', label:'מצב', icon:'shield'},
+  {id:'ereport', label:'דיווח', icon:'check'},
+  {id:'erequests', label:'בקשות', icon:'hand'},
+  {id:'etasks', label:'משימות', icon:'tasks'},
+  {id:'eupdates', label:'עדכונים', icon:'bell'},
+];
+function renderNav(){
+  const inApp = S.joined && !['splash','onboarding','summary'].includes(S.screen);
+  if(!inApp){ $nav.innerHTML=''; $nav.style.display='none'; return; }
+  $nav.style.display='flex';
+  const items = S.mode==='emergency' ? NAV_EMG : NAV_ROUTINE;
+  $nav.className = S.mode==='emergency' ? 'nav-emg' : '';
+  $nav.innerHTML = items.map(it=>{
+    const on = S.screen===it.id || (it.id==='ereport' && ['eok','ehelp','edanger'].includes(S.screen));
+    return `<button class="${on?'on':''}" onclick="go('${it.id}')" aria-current="${on?'page':'false'}">
+      <span class="nicon">${I[it.icon]}</span>${it.label}</button>`;
+  }).join('');
+}
+
+/* ============ מסכים ============ */
+const SCREENS = {};
+
+/* --- פתיחה --- */
+SCREENS.splash = () => `
+<div class="stack-lg center" style="min-height:100%; justify-content:center; padding:10px 6px;">
+  <div style="width:88px;height:88px;border-radius:26px;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow);">
+    ${IL('home')}
+  </div>
+  <div class="stack center" style="gap:8px">
+    <div class="eyebrow">שכנים־שכנים</div>
+    <h1>הבניין שלכם,<br>קהילה אחת</h1>
+    <p class="sub" style="max-width:280px">בשגרה עוזרים זה לזה.<br>בחירום — יודעים בדיוק מה קורה ומה לעשות.</p>
+  </div>
+  <div class="stack" style="width:100%; max-width:320px; gap:10px; margin-top:8px">
+    <button class="btn btn-primary" onclick="startOnboarding()">הצטרפות לבניין</button>
+    <button class="btn btn-ghost" onclick="quickEnter()">כניסה (כבר רשומים)</button>
+    <div class="row" style="justify-content:center; gap:4px">
+      <button class="btn-quiet" onclick="go('demos')">▶ מרכז ההדגמות</button>
+      <button class="btn-quiet" onclick="go('about')">על המוצר ←</button>
+    </div>
+  </div>
+  <p class="small" style="max-width:300px">האפליקציה היא כלי ניהול קהילתי. היא אינה מחליפה את שירותי החירום או את קבוצת הוואטסאפ.</p>
+</div>`;
+
+function startOnboarding(){ S.onb.step=0; go('onboarding'); }
+function quickEnter(){ S.joined=true; toast('נכנסתם כנועה ברק, דירה 8 (נתוני הדגמה)'); go('home'); }
+
+/* --- אונבורדינג --- */
+const ONB_STEPS = 8;
+SCREENS.onboarding = () => {
+  const o=S.onb;
+  const dots = `<div class="row-between"><button class="btn-quiet" onclick="onbBack()">${I.back} חזרה</button>
+    <div class="steps-dots">${Array.from({length:ONB_STEPS},(_,i)=>`<i class="${i<=o.step?'on':''}"></i>`).join('')}</div></div>`;
+  const bodies = [
+`<h2>נעים להכיר 👋</h2>
+<p class="sub">נרשמים עם מספר טלפון — כך השכנים יודעים שאתם באמת מהבניין.</p>
+<div><label class="fld" for="ph">מספר טלפון נייד</label>
+<input id="ph" type="tel" inputmode="tel" placeholder="050-1234567" value="${esc(o.phone)}" onchange="S.onb.phone=this.value" style="text-align:right"></div>
+<button class="btn btn-primary" onclick="onbNext()">שליחת קוד אימות</button>`,
+
+`<h2>הקוד בדרך אליכם</h2>
+<p class="sub">שלחנו קוד בן 4 ספרות למספר שהזנתם. באבטיפוס — כל קוד עובד 🙂</p>
+<div class="row" style="gap:8px; direction:ltr; justify-content:center">
+  ${[1,2,3,4].map(i=>`<input aria-label="ספרה ${i}" maxlength="1" inputmode="numeric" value="7" style="width:56px;text-align:center;font-size:24px;font-weight:800">`).join('')}
+</div>
+<button class="btn btn-primary" onclick="onbNext()">אימות והמשך</button>`,
+
+`<h2>איפה גרים?</h2>
+<p class="sub">מצאנו בניין אחד שמתאים למספר שלכם.</p>
+<button class="card row" style="width:100%; border-color:var(--blue)" onclick="onbNext()">
+  <span class="qicon" style="width:44px;height:44px;border-radius:12px;background:var(--blue-soft);color:var(--blue-ink);display:flex;align-items:center;justify-content:center">${I.home}</span>
+  <span style="flex:1"><b>${BUILDING}</b><br><span class="small">12 דירות · 4 קומות · ועד פעיל</span></span>
+  <span style="color:var(--blue-ink)">${I.back.replace('m10 6-6 6 6 6M4.5 12H20','m14 6 6 6-6 6M19.5 12H4')}</span>
+</button>
+<p class="small">בניין לא מופיע? אפשר להזמין את הוועד להקים אותו — דקה עבודה.</p>`,
+
+`<h2>באיזו דירה?</h2>
+<p class="sub">השיוך לדירה חשוב בחירום — כך יודעים שכולם דיווחו.</p>
+<div class="bmap">${APTS.map(a=>`<button class="bapt ${a.n===o.apt?'st-away':'st-none'}" onclick="S.onb.apt=${a.n};render()">
+  <span class="num">${a.n}</span><span class="st">קומה ${a.floor}</span></button>`).join('')}</div>
+<button class="btn btn-primary" onclick="onbNext()">זו הדירה שלנו</button>`,
+
+`<h2>מי גר בדירה?</h2>
+<div><label class="fld" for="nm">שם מלא</label><input id="nm" value="${esc(o.name)}" onchange="S.onb.name=this.value"></div>
+<div><label class="fld" for="pp">כמה נפשות בבית?</label>
+<select id="pp" onchange="S.onb.people=+this.value">${[1,2,3,4,5,6].map(n=>`<option ${n===o.people?'selected':''}>${n}</option>`).join('')}</select></div>
+<p class="small">בחירום, המספר הזה עוזר לוודא שאף אחד לא נשכח.</p>
+<button class="btn btn-primary" onclick="onbNext()">המשך</button>`,
+
+`<h2>במה תוכלו לעזור?</h2>
+<p class="sub">לא מחייב לכלום — רק עוזר לדעת למי לפנות כשצריך. אפשר לדלג.</p>
+<div class="chips">${SKILLS_ALL.map(s=>`<button class="chip ${o.skills.includes(s)?'on':''}" onclick="toggleOnb('skills','${s}')">${s}</button>`).join('')}</div>
+<button class="btn btn-primary" onclick="onbNext()">המשך</button>
+<button class="btn-quiet" style="align-self:center" onclick="onbNext()">דילוג</button>`,
+
+`<h2>יש ציוד שתשמחו להשאיל?</h2>
+<p class="sub">ציוד שיתופי הוא כוח־העל של בניין. אפשר לדלג ולהוסיף אחר כך.</p>
+<div class="chips">${EQUIP_ALL.map(s=>`<button class="chip ${o.equip.includes(s)?'on':''}" onclick="toggleOnb('equip','${s}')">${s}</button>`).join('')}</div>
+<button class="btn btn-primary" onclick="onbNext()">המשך</button>
+<button class="btn-quiet" style="align-self:center" onclick="onbNext()">דילוג</button>`,
+
+`<h2>הפרטיות שלכם, בשליטה שלכם</h2>
+<p class="sub">כל פרט — אתם מחליטים מי רואה. אפשר לשנות בכל רגע בפרופיל.</p>
+<div class="card stack">
+  ${privRow('sharePhone','מספר הטלפון שלי','גלוי רק לוועד. בחירום — גם למתנדב שמטפל בכם.')}
+  <div class="divider"></div>
+  ${privRow('shareSkills','היכולות שציינתי','גלויות לשכנים כדי שיֵדעו למי לפנות.')}
+</div>
+<button class="btn btn-primary" onclick="finishOnboarding()">סיום ההרשמה</button>`,
+  ];
+  return `<div class="stack-lg" style="min-height:100%">${dots}${`<div class="stack-lg" style="flex:1">${bodies[o.step]}</div>`}</div>`;
+};
+function privRow(key,title,sub){
+  const on=S.onb[key];
+  return `<div class="row-between"><div><b>${title}</b><div class="small">${sub}</div></div>
+  <button class="chip ${on?'on':''}" onclick="S.onb['${key}']=!S.onb['${key}'];render()" aria-pressed="${on}">${on?'משותף':'מוסתר'}</button></div>`;
+}
+function toggleOnb(k,v){ const a=S.onb[k]; const i=a.indexOf(v); i<0?a.push(v):a.splice(i,1); render(); }
+function onbNext(){ if(S.onb.step<ONB_STEPS-1){S.onb.step++; render(); $screen.scrollTop=0;} }
+function onbBack(){ if(S.onb.step>0){S.onb.step--; render();} else go('splash'); }
+function finishOnboarding(){
+  S.joined=true;
+  const me = APTS.find(a=>a.me);
+  me.name=S.onb.name; me.people=S.onb.people; me.skills=[...S.onb.skills]; me.equip=[...S.onb.equip];
+  toast('ברוכים הבאים לבניין! 🎉');
+  go('home');
+}
+
+/* --- דף תדמית --- */
+SCREENS.about = () => `
+<div class="stack-lg">
+  <button class="btn-quiet" onclick="go('${S.joined?'profile':'splash'}')" style="align-self:flex-start">${I.back} חזרה</button>
+  <div class="center stack" style="gap:12px; padding:6px 0 4px">
+    <div style="width:64px;height:64px;border-radius:18px;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center">${IL('home')}</div>
+    <div class="eyebrow">שכנים־שכנים</div>
+    <h1 style="font-size:24px">בחירום, הבעיה היא לא הרצון לעזור.<br>היא לדעת מה קורה.</h1>
+    <p class="sub" style="max-width:300px">שכנים־שכנים הופכת בניין מגורים לקהילה מאורגנת — שבשעת אמת יודעת תוך דקות מי בסדר, מי צריך עזרה, ומי יכול לתת אותה.</p>
+  </div>
+
+  <div class="card stack" style="gap:8px"><span class="tag tag-red" style="align-self:flex-start">הבעיה</span>
+    <p style="font-size:15px">ברגע האמת קבוצת הוואטסאפ מוצפת במאות הודעות. הוועד לא יודע מי בבניין, מי זקוק לעזרה, מי יכול לעזור — ומאיפה בכלל מתחילים.</p></div>
+  <div class="card stack" style="gap:8px"><span class="tag tag-green" style="align-self:flex-start">הפתרון</span>
+    <p style="font-size:15px">דיווח מצב בלחיצה אחת, מפת בניין חיה, והקצאת מתנדבים לפי מיומנות וקרבה — על גבי קהילה שכבר חיה באפליקציה בשגרה, ולכן יודעת להשתמש בה בחירום.</p></div>
+
+  <div class="card stack">
+    <b>איך זה עובד</b>
+    ${[['1','בשגרה — בונים קהילה','עזרה הדדית, ציוד משותף, מיומנויות והיכרות. שימוש טבעי, בלי מאמץ.'],
+       ['2','בחירום — עוברים מצב','הממשק מתחלף: דיווח בשלושה כפתורים, מפת בניין חיה, משימות למתנדבים.'],
+       ['3','אחרי האירוע — משתפרים','סיכום אוטומטי: מי דיווח, מה טופל, ומה כדאי לשפר לפעם הבאה.']]
+      .map(([n,t,s])=>`<div class="row" style="align-items:flex-start; gap:12px">
+        <span class="avatar" style="width:34px;height:34px;font-size:15px">${n}</span>
+        <div><b>${t}</b><div class="small">${s}</div></div></div>`).join('')}
+  </div>
+
+  <div class="counters">
+    ${counter('דקות','לתמונת מצב מלאה','st-away')}
+    ${counter('1','לחיצה לדיווח "בסדר"','st-ok')}
+    ${counter('0','התקנות לדיירים — Web','st-none')}
+  </div>
+
+  <div class="card stack center" style="background:var(--blue-soft); border-color:#C7D8EF; padding:22px 16px">
+    <b style="color:var(--blue-ink); font-size:18px">רוצים את זה בבניין שלכם?</b>
+    <p class="sub" style="color:var(--blue-ink)">אנחנו מגייסים בנייני פיילוט. ההקמה — פחות מיום.</p>
+    <button class="btn btn-primary" onclick="openPilot()">הצטרפות לפיילוט</button>
+    <button class="btn-quiet" onclick="go('demos')">קודם לראות הדגמה ←</button>
+  </div>
+</div>`;
+function openPilot(){
+  openModal(`<div class="stack-lg">
+    <h2>הצטרפות לפיילוט</h2>
+    <p class="sub">נחזור אליכם תוך יום־יומיים לתיאום הקמה.</p>
+    <div><label class="fld" for="pi-nm">שם מלא</label><input id="pi-nm" placeholder="שם ושם משפחה"></div>
+    <div><label class="fld" for="pi-bl">כתובת הבניין</label><input id="pi-bl" placeholder="רחוב, מספר ועיר"></div>
+    <div><label class="fld" for="pi-rl">התפקיד שלכם בבניין</label>
+      <select id="pi-rl"><option>חבר/ת ועד</option><option>דייר/ת</option><option>חברת ניהול</option></select></div>
+    <button class="btn btn-primary" onclick="sendPilot()">${I.send} שליחה</button>
+  </div>`);
+}
+function sendPilot(){
+  const nm=document.getElementById('pi-nm').value.trim();
+  if(!nm){ toast('איך קוראים לכם? נשמח לשם'); return; }
+  closeModal(); toast('תודה '+nm.split(' ')[0]+'! נחזור אליכם ממש בקרוב 🤝');
+}
+
+/* --- מרכז הדגמות --- */
+SCREENS.demos = () => `
+<div class="stack-lg">
+  <button class="btn-quiet" onclick="go('${S.joined?'profile':'splash'}')" style="align-self:flex-start">${I.back} חזרה</button>
+  <h2>מרכז ההדגמות</h2>
+  <p class="sub">שלושה תסריטים מודרכים על בניין הדמה "${BUILDING}" — 12 דירות, דיירים, ציוד ומיומנויות. עקבו אחרי ההתראות: הבניין מגיב אליכם בזמן אמת.</p>
+
+  ${demoCard('people','tag-green','יום בחיי הבניין','שגרה חיה: פרסומים חדשים נכנסים, שכנים מגיבים לכם, בקשת השאלה מאושרת. נסו לפרסם, להשאיל ציוד ולדווח תקלה.','demoRoutine()','כ־2 דקות')}
+  ${demoCard('shield','tag-orange','תרגיל חירום מלא','רעידת אדמה (תרגיל): דיירים מדווחים בהדרגה, נכנסת בקשת עזרה מרחל בדירה 6, ואתם מקבלים משימת בדיקה. נהלו את האירוע עד הסיכום.','demoDrill()','כ־3 דקות')}
+  ${demoCard('alert','tag-red','אירוע אמת','אותו תרחיש — בממשק אירוע אמת (ללא תיוג "תרגיל"). כולל מסך המצוקה עם הפניה לשירותי החירום.','demoReal()','כ־3 דקות')}
+
+  <p class="small">בכל רגע אפשר לאפס את ההדגמה מהפרופיל ולהתחיל מחדש.</p>
+</div>`;
+function demoCard(icon,tag,title,desc,fn,dur){
+  return `<div class="card stack" style="gap:10px">
+    <div class="row"><span class="qicon" style="background:var(--surface-2)">${I[icon]}</span>
+      <div style="flex:1"><b>${title}</b></div><span class="tag ${tag}">${dur}</span></div>
+    <p class="small" style="font-size:14px">${desc}</p>
+    <button class="btn btn-primary" style="min-height:46px; font-size:15.5px" onclick="${fn}">הפעלת התסריט</button>
+  </div>`;
+}
+function demoRoutine(){
+  if(!S.joined){ S.joined=true; }
+  if(S.mode==='emergency'){ toast('יש אירוע חירום פעיל — סיימו אותו קודם'); return; }
+  go('community');
+  toast('תסריט "יום בחיי הבניין" הופעל — שימו לב להתראות');
+  rsim(5000, ()=>{ S.posts.unshift({id:S.nextPost++, who:'מאיה ניסים', apt:'דירה 11', cat:'טרמפים', catTag:'tag-gray', time:'עכשיו', text:'יוצאת עוד רבע שעה לסופר — מישהו צריך שאביא משהו?', act:'כן, בבקשה!', done:false, replies:[]}); toast('פרסום חדש בקהילה — מאיה ניסים'); });
+  rsim(11000, ()=>{ S.posts.unshift({id:S.nextPost++, who:'אלכס פורטנוי', apt:'דירה 9', cat:'השאלת ציוד', catTag:'tag-green', time:'עכשיו', text:'הסולם חזר אליי — פנוי שוב להשאלה למי שצריך.', act:'אני צריכה!', done:false, replies:[]}); toast('אלכס פרסם ציוד להשאלה'); });
+  rsim(17000, ()=>{ S.posts.unshift({id:S.nextPost++, who:'ועד הבניין', apt:'', official:true, cat:'אירוע', catTag:'tag-blue', time:'עכשיו', text:'תזכורת: מפגש דיירים בגינה ביום שישי ב־16:30. מחכים לכולם! ☕', act:'נגיע!', done:false, replies:[]}); toast('הודעת ועד חדשה'); });
+}
+function demoDrill(){ if(!S.joined) S.joined=true; if(S.mode==='emergency'){ go('estatus'); return; } startEmergency(true); }
+function demoReal(){ if(!S.joined) S.joined=true; if(S.mode==='emergency'){ go('estatus'); return; } startEmergency(false); }
+
+/* --- בית (שגרה) --- */
+SCREENS.home = () => {
+  const hour = new Date().getHours();
+  const greet = hour<12?'בוקר טוב':hour<17?'צהריים טובים':hour<21?'ערב טוב':'לילה טוב';
+  const firstName = S.onb.name.split(' ')[0];
+  const ready = Object.values(S.readyDone).filter(Boolean).length;
+  const latest = S.posts.slice(0,2);
+  return `
+<div class="stack-lg">
+  <div class="row-between">
+    <div><h2>${greet}, ${esc(firstName)}</h2><div class="small">${BUILDING} · דירה ${S.onb.apt}</div></div>
+    <div class="avatar" aria-hidden="true">${initials(S.onb.name)}</div>
+  </div>
+
+  <div class="card" style="background:var(--blue-soft); border-color:#C7D8EF">
+    <div class="row" style="align-items:flex-start">
+      <span style="color:var(--blue-ink)">${I.bell}</span>
+      <div>
+        <b style="color:var(--blue-ink)">הודעת ועד · בדיקת גז ביום שלישי</b>
+        <p class="sub" style="color:var(--blue-ink); font-size:14px">נציג יעבור בין הדירות בין 8:00 ל־10:00. נא לוודא שמישהו בבית.</p>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="eyebrow" style="margin-bottom:9px">פעולות מהירות</div>
+    <div class="qa-grid">
+      ${qa('msg','פרסום הודעה',"openComposer('הודעה')")}
+      ${qa('hand','בקשת עזרה',"openComposer('בקשת עזרה')")}
+      ${qa('box','השאלת ציוד',"go('resources')")}
+      ${qa('wrench','דיווח תקלה',"openFault()")}
+    </div>
+  </div>
+
+  <div>
+    <div class="row-between" style="margin-bottom:9px">
+      <div class="eyebrow">חדש בקהילה</div>
+      <button class="btn-quiet" onclick="go('community')">לכל העדכונים ←</button>
+    </div>
+    <div class="stack">${latest.map(postCard).join('')}</div>
+  </div>
+
+  <div class="card">
+    <div class="row-between">
+      <div><b>מוכנות הבית שלכם לחירום</b><div class="small">${ready} מתוך 4 צעדים הושלמו</div></div>
+      <b style="color:var(--blue-ink); font-variant-numeric:tabular-nums">${ready*25}%</b>
+    </div>
+    <div class="progress" style="margin:10px 0"><div style="width:${ready*25}%"></div></div>
+    <button class="btn-quiet" onclick="openReady()">להשלמת הצעדים ←</button>
+  </div>
+
+  <button class="card row" style="width:100%; border-color:#EDBBBB" onclick="openEmgConfirm()">
+    <span style="width:44px;height:44px;border-radius:12px;background:var(--red-soft);color:var(--red);display:flex;align-items:center;justify-content:center">${I.shield}</span>
+    <span style="flex:1"><b>מצב חירום</b><br><span class="small">הפעלה מיידית או תרגיל מוכנות לבניין</span></span>
+  </button>
+</div>`;
+};
+const qa = (icon,label,fn) => `<button class="qa" onclick="${fn}"><span class="qicon">${I[icon]}</span>${label}</button>`;
+
+function openReady(){
+  const items = [
+    ['water','3 ליטר מים לנפש ליומיים'],
+    ['kit','ערכת עזרה ראשונה בבית'],
+    ['meet','קבענו נקודת מפגש משפחתית'],
+    ['docs','צילמנו מסמכים חשובים לענן'],
+  ];
+  openModal(`<div class="stack-lg">
+    <h2>מוכנות הבית לחירום</h2>
+    <p class="sub">ארבעה צעדים קטנים שעושים הבדל גדול. סמנו מה כבר יש לכם.</p>
+    <div class="card stack">
+      ${items.map(([k,t])=>`<button class="row" style="width:100%; padding:4px 0" onclick="S.readyDone['${k}']=!S.readyDone['${k}'];openReady();render()">
+        <span class="tag ${S.readyDone[k]?'tag-green':'tag-gray'}" style="width:30px;height:30px;justify-content:center;border-radius:9px">${S.readyDone[k]?I.check:''}</span>
+        <span style="flex:1; ${S.readyDone[k]?'':'color:var(--ink-2)'}">${t}</span>
+      </button>`).join('<div class="divider"></div>')}
+    </div>
+    <button class="btn btn-primary" onclick="closeModal()">סגירה</button>
+  </div>`);
+}
+
+/* --- קהילה --- */
+let feedFilter = 'הכול';
+SCREENS.community = () => {
+  const cats = ['הכול','הודעה','בקשת עזרה','השאלת ציוד','המלצות','טרמפים','אירוע','תקלה'];
+  const posts = S.posts.filter(p=>feedFilter==='הכול'||p.cat===feedFilter);
+  return `
+<div class="stack-lg">
+  <div class="row-between"><h2>הקהילה</h2>
+    <button class="btn-quiet" style="background:var(--blue);color:#fff;border-radius:999px;padding:9px 16px" onclick="openComposer('הודעה')">+ פרסום</button></div>
+  <div class="chips" style="overflow-x:auto; flex-wrap:nowrap; padding-bottom:2px">
+    ${cats.map(c=>`<button class="chip ${feedFilter===c?'on':''}" style="flex:none" onclick="feedFilter='${c}';render()">${c}</button>`).join('')}
+  </div>
+  <div class="stack">
+    ${posts.length? posts.map(postCard).join('') : `<div class="card center stack" style="padding:34px 16px">
+      <span style="color:var(--ink-3)">${IL('msg')}</span><b>עוד אין פרסומים בקטגוריה הזו</b>
+      <p class="small">אתם מוזמנים להיות הראשונים.</p>
+      <button class="btn btn-ghost" onclick="openComposer('${feedFilter==='הכול'?'הודעה':feedFilter}')">פרסום ראשון</button></div>`}
+  </div>
+</div>`;
+};
+function postCard(p){
+  return `<article class="card post">
+    <div class="meta">
+      <span class="avatar" style="${p.official?'background:var(--blue);color:#fff':''}">${p.official?I.home:initials(p.who)}</span>
+      <div style="flex:1"><b>${esc(p.who)}</b> <span class="small">${p.apt?'· '+esc(p.apt):''} · ${esc(p.time)}</span></div>
+      <span class="tag ${p.catTag}">${esc(p.cat)}</span>
+    </div>
+    <p style="font-size:15.5px">${esc(p.text)}</p>
+    ${(p.replies&&p.replies.length)?`<div class="divider" style="margin-top:11px"></div>
+    <div class="stack" style="gap:9px; margin-top:10px">${p.replies.map(r=>`
+      <div class="row" style="align-items:flex-start; gap:8px">
+        <span class="avatar" style="width:28px;height:28px;font-size:11px;${r.mine?'background:var(--green-soft);color:var(--green-ink)':''}">${initials(r.who)}</span>
+        <div style="font-size:14px; line-height:1.45"><b>${esc(r.who)}</b> · <span style="color:var(--ink-2)">${esc(r.text)}</span></div>
+      </div>`).join('')}</div>`:''}
+    <div class="row" style="margin-top:11px">
+      <button class="chip ${p.done?'on':''}" onclick="postAct(${p.id})">${p.done?'✓ ':''}${esc(p.act)}</button>
+    </div>
+  </article>`;
+}
+function postAct(id){
+  const p=S.posts.find(x=>x.id===id); if(!p)return;
+  p.done=!p.done;
+  p.replies=p.replies||[];
+  if(p.done){
+    p.replies.push({who:S.onb.name, text:p.act, mine:true});
+    toast(`נשלח ל${p.official?'ועד הבניין':p.who} — "${p.act}"`, ()=>{p.done=false; p.replies=p.replies.filter(r=>!r.mine);});
+    const from=p.official?'ועד הבניין':p.who;
+    rsim(4500, ()=>{ if(!p.done)return; p.replies.push({who:from, text:'איזה כיף, תודה רבה! נהיה בקשר 🙏'}); toast(`${from} הגיב/ה לכם בקהילה`); });
+  } else {
+    p.replies=p.replies.filter(r=>!r.mine);
+  }
+  render();
+}
+function openComposer(cat){
+  const cats=['הודעה','בקשת עזרה','השאלת ציוד','המלצות','טרמפים','אירוע','תקלה'];
+  openModal(`<div class="stack-lg">
+    <h2>פרסום לקהילה</h2>
+    <div><label class="fld">מה מפרסמים?</label>
+      <div class="chips" id="comp-cats">${cats.map(c=>`<button class="chip ${c===cat?'on':''}" data-c="${c}" onclick="selCompCat(this)">${c}</button>`).join('')}</div></div>
+    <div><label class="fld" for="comp-txt">מה תרצו לספר לשכנים?</label>
+      <textarea id="comp-txt" rows="4" placeholder="כתבו בפשטות, כמו לשכן במעלית..."></textarea></div>
+    <button class="btn btn-primary" onclick="publishPost()">${I.send} פרסום</button>
+  </div>`);
+}
+function selCompCat(el){ document.querySelectorAll('#comp-cats .chip').forEach(c=>c.classList.remove('on')); el.classList.add('on'); }
+function selChipIn(el, wrapId){ document.querySelectorAll('#'+wrapId+' .chip').forEach(c=>c.classList.remove('on')); el.classList.add('on'); }
+
+/* --- דיווח תקלה --- */
+function openFault(){
+  const locs=['חדר מדרגות','מעלית','לובי','חניה','גינה','תאורה','אחר'];
+  openModal(`<div class="stack-lg">
+    <h2>דיווח תקלה בבניין</h2>
+    <p class="sub">הדיווח נשלח ישירות לוועד. עוקבים אחרי הטיפול במסך המשימות.</p>
+    <div><label class="fld">איפה התקלה?</label>
+      <div class="chips" id="fault-locs">${locs.map((l,i)=>`<button class="chip ${i===0?'on':''}" data-l="${l}" onclick="selChipIn(this,'fault-locs')">${l}</button>`).join('')}</div></div>
+    <div><label class="fld" for="fault-txt">מה קרה?</label>
+      <textarea id="fault-txt" rows="3" placeholder="לדוגמה: הנורה בקומה 3 מהבהבת כבר יומיים"></textarea></div>
+    <button class="btn btn-primary" onclick="submitFault()">${I.send} שליחת הדיווח לוועד</button>
+  </div>`);
+}
+function submitFault(){
+  const txt=document.getElementById('fault-txt').value.trim();
+  if(!txt){ toast('תארו את התקלה בכמה מילים'); return; }
+  const loc=document.querySelector('#fault-locs .chip.on')?.dataset.l||'אחר';
+  const id=S.nextFault++;
+  S.faults.unshift({id, loc, text:txt, status:'נשלח לוועד', handler:null, time:nowHM()});
+  closeModal();
+  toast('הדיווח נשלח לוועד ✓ מעקב — במסך המשימות');
+  rsim(7000, ()=>{ const f=S.faults.find(x=>x.id===id); if(!f||f.status!=='נשלח לוועד')return;
+    f.status='בטיפול'; f.handler='אלכס פורטנוי (מתנדב הבניין)';
+    toast('הוועד קיבל את הדיווח — אלכס פורטנוי בודק'); });
+  rsim(16000, ()=>{ const f=S.faults.find(x=>x.id===id); if(!f||f.status!=='בטיפול')return;
+    f.status='טופל';
+    toast(`התקלה ב${f.loc} טופלה ✓ תודה שדיווחתם`); });
+  go('tasks');
+}
+function publishPost(){
+  const txt = document.getElementById('comp-txt').value.trim();
+  if(!txt){ toast('כתבו כמה מילים ואז פרסמו'); return; }
+  const cat = document.querySelector('#comp-cats .chip.on')?.dataset.c || 'הודעה';
+  const tagMap={'בקשת עזרה':'tag-orange','השאלת ציוד':'tag-green','תקלה':'tag-orange'};
+  const id=S.nextPost++;
+  S.posts.unshift({id, who:S.onb.name, apt:'דירה '+S.onb.apt, cat, catTag:tagMap[cat]||'tag-blue', time:'עכשיו', text:txt, act:'אני כאן בשבילכם', done:false, replies:[]});
+  closeModal();
+  toast('פורסם לקהילה ✓', ()=>{S.posts=S.posts.filter(p=>p.id!==id);});
+  rsim(6000, ()=>{ const p=S.posts.find(x=>x.id===id); if(!p)return;
+    p.replies.push({who:'דנה לוי', text:'נשמע מצוין — אני בפנים! 🙂'});
+    toast('דנה לוי (דירה 2) הגיבה לפרסום שלכם'); });
+  go('community');
+}
+
+/* --- משאבים --- */
+let resQ='', resCat='הכול', resTab='items', peopleSkill='הכול';
+SCREENS.resources = () => {
+  const seg=`<div class="chips">
+    <button class="chip ${resTab==='items'?'on':''}" onclick="resTab='items';resQ='';render()">${I.box} ציוד להשאלה</button>
+    <button class="chip ${resTab==='people'?'on':''}" onclick="resTab='people';resQ='';render()">${I.people} שכנים ומיומנויות</button>
+  </div>`;
+  if(resTab==='people'){
+    const skills=['הכול',...SKILLS_ALL];
+    const ppl=APTS.filter(a=>{
+      if(peopleSkill!=='הכול'&&!a.skills.includes(peopleSkill))return false;
+      if(resQ&&!(a.name.includes(resQ)||a.skills.some(s=>s.includes(resQ))||a.note.includes(resQ)))return false;
+      return true;
+    });
+    return `<div class="stack-lg">
+      <h2>משאבי הבניין</h2>${seg}
+      <div class="row card" style="padding:6px 14px; gap:8px">
+        <span style="color:var(--ink-3)">${I.search}</span>
+        <input value="${esc(resQ)}" placeholder="מי יודע... עזרה ראשונה? חשמל?" oninput="resQ=this.value;render();this.focus();this.setSelectionRange(this.value.length,this.value.length)" style="border:none;padding:9px 0;background:none">
+      </div>
+      <div class="chips" style="overflow-x:auto; flex-wrap:nowrap">
+        ${skills.map(c=>`<button class="chip ${peopleSkill===c?'on':''}" style="flex:none" onclick="peopleSkill='${c}';render()">${c}</button>`).join('')}
+      </div>
+      <div class="stack">
+        ${ppl.length? ppl.map(peopleCard).join('') : `<div class="card center stack" style="padding:30px 16px">
+          <b>לא מצאנו שכנים מתאימים</b><p class="small">נסו מיומנות אחרת, או פרסמו בקשה בקהילה.</p>
+          <button class="btn btn-ghost" onclick="openComposer('בקשת עזרה')">בקשה בקהילה</button></div>`}
+      </div>
+      <p class="small">🔒 מוצגות רק מיומנויות שהשכנים בחרו לשתף. פרטי קשר נחשפים רק בהסכמתם.</p>
+    </div>`;
+  }
+  const cats=['הכול','ציוד חירום','ציוד רפואי','כלי עבודה','ילדים','מטבח'];
+  const items=RESOURCES.filter(r=>(resCat==='הכול'||r.cat===resCat)&&(!resQ||r.name.includes(resQ)||r.owner.includes(resQ)));
+  return `
+<div class="stack-lg">
+  <h2>משאבי הבניין</h2>${seg}
+  <div class="row card" style="padding:6px 14px; gap:8px">
+    <span style="color:var(--ink-3)">${I.search}</span>
+    <input value="${esc(resQ)}" placeholder="מה מחפשים? מקדחה, גנרטור..." oninput="resQ=this.value;render();this.focus();this.setSelectionRange(this.value.length,this.value.length)" style="border:none;padding:9px 0;background:none">
+  </div>
+  <div class="chips" style="overflow-x:auto; flex-wrap:nowrap">
+    ${cats.map(c=>`<button class="chip ${resCat===c?'on':''}" style="flex:none" onclick="resCat='${c}';render()">${c}</button>`).join('')}
+  </div>
+  <div class="stack">
+    ${items.length? items.map(resCard).join('') : `<div class="card center stack" style="padding:30px 16px">
+      <b>לא מצאנו "${esc(resQ)}"</b><p class="small">נסו מילה אחרת, או בקשו מהשכנים בקהילה.</p>
+      <button class="btn btn-ghost" onclick="openComposer('בקשת עזרה')">בקשה בקהילה</button></div>`}
+  </div>
+  <p class="small">📍 פרטי קשר של בעלי ציוד נחשפים רק אחרי שהם מאשרים את הבקשה.</p>
+</div>`;
+};
+function peopleCard(a){
+  return `<div class="card row" style="align-items:flex-start">
+    <span class="avatar">${initials(a.name)}</span>
+    <div style="flex:1"><b>${esc(a.name)}${a.me?' (אתם)':''}</b>
+      <div class="small">דירה ${a.n} · קומה ${a.floor}${a.note&&!a.me?' · '+esc(a.note):''}</div>
+      ${a.skills.length?`<div class="chips" style="margin-top:7px">${a.skills.map(s=>`<span class="tag tag-blue">${s}</span>`).join('')}</div>`:''}
+      ${a.equip.length?`<div class="small" style="margin-top:5px">ציוד: ${a.equip.join(', ')}</div>`:''}
+    </div>
+    ${a.me?'':`<button class="chip" style="flex:none" onclick="openContact(${a.n})">${I.msg} פנייה</button>`}
+  </div>`;
+}
+function openContact(n){
+  const a=APTS.find(x=>x.n===n);
+  openModal(`<div class="stack-lg">
+    <div class="row"><span class="avatar">${initials(a.name)}</span><div><h2 style="font-size:18px">הודעה ל${esc(a.name)}</h2><div class="small">דירה ${a.n}${a.skills.length?' · '+a.skills.join(', '):''}</div></div></div>
+    <textarea id="contact-txt" rows="3" placeholder="כתבו בפשטות — לדוגמה: היי, אשמח לעזרה קטנה עם..."></textarea>
+    <button class="btn btn-primary" onclick="sendContact(${n})">${I.send} שליחת ההודעה</button>
+    <p class="small">ההודעה עוברת דרך האפליקציה — המספר שלכם לא נחשף עד שתבחרו.</p>
+  </div>`);
+}
+function sendContact(n){
+  const a=APTS.find(x=>x.n===n);
+  const txt=document.getElementById('contact-txt').value.trim();
+  if(!txt){ toast('כתבו כמה מילים לפני השליחה'); return; }
+  closeModal(); toast(`ההודעה נשלחה ל${a.name} ✓`);
+  rsim(6000, ()=>toast(`${a.name}: "היי! בשמחה, בואו נדבר בערב 🙂"`));
+}
+function resCard(r){
+  const st=S.borrows[r.name];
+  return `<div class="card row">
+    <span class="qicon" style="width:44px;height:44px;border-radius:12px;background:var(--green-soft);color:var(--green-ink);display:flex;align-items:center;justify-content:center">${I.box}</span>
+    <div style="flex:1"><b>${esc(r.name)}</b><div class="small">${esc(r.owner)}</div></div>
+    ${!r.avail? `<span class="tag tag-gray">מושאל כרגע</span>`
+      : st==='pending'? `<span class="tag tag-blue">ממתין לאישור</span>`
+      : st==='approved'? `<span class="tag tag-green">${I.check} אצלכם</span>`
+      : `<button class="chip" onclick="borrow('${esc(r.name)}')">בקשת השאלה</button>`}
+  </div>`;
+}
+function borrow(name){
+  S.borrows[name]='pending';
+  const tid=S.nextTask++;
+  S.tasks.push({id:tid, kind:'borrow', item:name, title:`השאלה: ${name}`, sub:'ממתין לאישור הבעלים', status:'pending'});
+  toast('הבקשה נשלחה לבעלי הציוד ✓', ()=>{delete S.borrows[name]; S.tasks=S.tasks.filter(t=>t.id!==tid);});
+  rsim(6000, ()=>{ const t=S.tasks.find(x=>x.id===tid); if(!t||t.status!=='pending')return;
+    t.status='approved'; t.sub='אושר! לאיסוף אצל '+((RESOURCES.find(r=>r.name===name)||{}).owner||'הבעלים');
+    S.borrows[name]='approved';
+    toast(`הבקשה ל"${name}" אושרה 🎉 אפשר לאסוף`); });
+  render();
+}
+function returnItem(id){
+  const t=S.tasks.find(x=>x.id===id); if(!t)return;
+  t.status='returned'; t.sub='הציוד הוחזר לבעלים. תודה על השותפות!';
+  delete S.borrows[t.item];
+  toast('סומן כהוחזר — הבעלים קיבלו עדכון ✓');
+  render();
+}
+
+/* --- משימות (שגרה) --- */
+SCREENS.tasks = () => {
+  const borrows=S.tasks.filter(t=>t.kind==='borrow');
+  const has=borrows.length||S.faults.length;
+  return `
+<div class="stack-lg">
+  <h2>המשימות שלי</h2>
+  ${has? `
+    ${borrows.length?`<div class="eyebrow">השאלות ציוד</div><div class="stack">${borrows.map(borrowCard).join('')}</div>`:''}
+    ${S.faults.length?`<div class="eyebrow">דיווחי תקלות</div><div class="stack">${S.faults.map(faultCard).join('')}</div>`:''}
+  `
+  : `<div class="card center stack" style="padding:38px 16px">
+      <span style="color:var(--ink-3)">${IL('tasks')}</span>
+      <b>אין משימות פתוחות — מעולה!</b>
+      <p class="small" style="max-width:250px">כשתשאילו ציוד, תדווחו תקלה או תקבלו משימה בחירום — הכול יופיע כאן.</p>
+      <button class="btn btn-ghost" onclick="go('resources')">מה יש להשאיל בבניין?</button>
+    </div>`}
+</div>`;
+};
+function borrowCard(t){
+  return `<div class="card row" style="${t.status==='returned'?'opacity:.6':''}">
+    <span class="qicon" style="width:42px;height:42px;border-radius:12px;background:var(--blue-soft);color:var(--blue-ink);display:flex;align-items:center;justify-content:center">${I.box}</span>
+    <div style="flex:1"><b>${esc(t.title)}</b><div class="small">${esc(t.sub)}</div></div>
+    ${t.status==='pending'?`<span class="tag tag-blue">בהמתנה</span>`
+     :t.status==='approved'?`<button class="chip on" onclick="returnItem(${t.id})">החזרתי ✓</button>`
+     :`<span class="tag tag-green">${I.check} הוחזר</span>`}
+  </div>`;
+}
+function faultCard(f){
+  const tag=f.status==='טופל'?'tag-green':f.status==='בטיפול'?'tag-blue':'tag-gray';
+  return `<div class="card stack" style="gap:7px; ${f.status==='טופל'?'opacity:.7':''}">
+    <div class="row-between"><b>תקלה: ${esc(f.loc)}</b><span class="tag ${tag}">${f.status==='טופל'?I.check+' ':''}${esc(f.status)}</span></div>
+    <p class="small">${esc(f.text)}</p>
+    <div class="small">${f.handler?'מטפל: '+esc(f.handler)+' · ':''}דווח ב־${f.time}</div>
+  </div>`;
+}
+
+/* --- פרופיל --- */
+SCREENS.profile = () => {
+  const o=S.onb;
+  return `
+<div class="stack-lg">
+  <div class="card center stack" style="gap:8px">
+    <div class="avatar" style="width:66px;height:66px;font-size:24px">${initials(o.name)}</div>
+    <h2>${esc(o.name)}</h2>
+    <div class="small">${BUILDING} · דירה ${o.apt} · ${o.people} נפשות בבית</div>
+  </div>
+
+  <div class="card stack">
+    <b>היכולות שלי</b>
+    <div class="chips">${SKILLS_ALL.map(s=>`<button class="chip ${o.skills.includes(s)?'on':''}" onclick="toggleOnb('skills','${s}')">${s}</button>`).join('')}</div>
+    <p class="small">היכולות עוזרות לשכנים לדעת למי לפנות — בעיקר בחירום.</p>
+  </div>
+
+  <div class="card stack">
+    <b>פרטיות</b>
+    ${privRow('sharePhone','מספר הטלפון שלי','גלוי רק לוועד. בחירום — גם למתנדב שמטפל בכם.')}
+    <div class="divider"></div>
+    ${privRow('shareSkills','היכולות שציינתי','גלויות לשכנים כדי שידעו למי לפנות.')}
+  </div>
+
+  <div class="card stack">
+    <div class="row-between">
+      <div><b>תצוגת רכז / ועד</b><div class="small">ניהול הבניין בשגרה ובזמן אירוע (חברי ועד)</div></div>
+      <button class="chip ${S.coordinator?'on':''}" aria-pressed="${S.coordinator}" onclick="S.coordinator=!S.coordinator;render();toast(S.coordinator?'תצוגת רכז הופעלה':'חזרתם לתצוגת דייר')">${S.coordinator?'פעיל':'כבוי'}</button>
+    </div>
+    ${S.coordinator?`<button class="btn btn-ghost" onclick="go('manage')">${I.shield} ניהול הבניין ←</button>`:''}
+  </div>
+
+  <button class="card row" style="width:100%" onclick="go('demos')">
+    <span class="qicon" style="background:var(--blue-soft);color:var(--blue-ink)">${I.cal}</span>
+    <span style="flex:1"><b>מרכז ההדגמות</b><br><span class="small">תסריטים מודרכים: שגרה חיה, תרגיל ואירוע אמת</span></span>
+  </button>
+
+  <button class="btn-quiet" onclick="resetAll()">איפוס ההדגמה והתחלה מחדש</button>
+</div>`;
+};
+
+/* --- ניהול הבניין (ועד, שגרה) --- */
+SCREENS.manage = () => {
+  const openF=S.faults.filter(f=>f.status!=='טופל');
+  const people=APTS.reduce((s,a)=>s+a.people,0);
+  const skilled=APTS.filter(a=>a.skills.length).length;
+  return `<div class="stack-lg">
+    <div class="row-between"><h2>ניהול הבניין</h2><span class="tag tag-blue">תצוגת ועד</span></div>
+
+    <div class="counters" style="grid-template-columns:1fr 1fr">
+      ${counter(APTS.length,'דירות רשומות','st-away')}
+      ${counter(people,'דיירים','st-ok')}
+      ${counter(openF.length,'תקלות פתוחות', openF.length?'st-help':'st-ok')}
+      ${counter(skilled,'דירות עם מיומנות','st-away')}
+    </div>
+
+    <div class="card stack">
+      <b>הודעה רשמית לדיירים</b>
+      <div class="row" style="gap:8px">
+        <input id="ann-in" placeholder="לדוגמה: הפסקת מים מתוכננת ביום רביעי 9:00–11:00" style="flex:1">
+        <button class="chip on" style="flex:none" onclick="postAnnouncement()">פרסום</button>
+      </div>
+    </div>
+
+    <div class="card stack">
+      <div class="row-between"><b>תקלות בבניין</b><span class="small">${S.faults.length} דיווחים</span></div>
+      ${S.faults.length? S.faults.map(f=>`<div class="row-between" style="align-items:flex-start">
+          <div style="flex:1"><b style="font-size:14.5px">${esc(f.loc)}</b> <span class="small">· ${f.time}</span><div class="small">${esc(f.text)}</div></div>
+          ${f.status!=='טופל'?`<button class="chip" style="flex:none" onclick="fixFault(${f.id})">סימון טופל</button>`:`<span class="tag tag-green">${I.check} טופל</span>`}
+        </div>`).join('<div class="divider"></div>')
+      : '<p class="small">אין תקלות מדווחות כרגע 🙌</p>'}
+    </div>
+
+    <div class="card stack">
+      <b>דירות ודיירים</b>
+      ${APTS.map(a=>`<div class="row" style="gap:9px">
+        <span class="bapt st-away" style="width:38px; padding:5px 2px; flex:none"><span class="num" style="font-size:14px">${a.n}</span></span>
+        <div style="flex:1; font-size:14px"><b>${esc(a.name)}</b><div class="small">${a.people} נפשות${a.skills.length?' · '+a.skills.join(', '):''}${a.needs?' · ⚠ '+esc(a.needs):''}</div></div>
+      </div>`).join('')}
+    </div>
+
+    ${S.lastSummary?`<div class="card stack">
+      <b>אירוע אחרון: ${S.lastSummary.drill?'תרגיל':'אירוע'} ${esc(S.lastSummary.name)}</b>
+      <p class="small">${S.lastSummary.start}–${S.lastSummary.end} · ${S.lastSummary.reported}/${S.lastSummary.total} דירות דיווחו · ${S.lastSummary.reqsDone}/${S.lastSummary.reqs} בקשות טופלו · ${S.lastSummary.tasksDone}/${S.lastSummary.tasksAll} משימות הושלמו</p>
+      <button class="btn-quiet" onclick="S.summary=S.lastSummary;go('summary')">לסיכום המלא ←</button>
+    </div>`:`<div class="card stack"><b>אירועי חירום ותרגילים</b><p class="small">עוד לא נערך תרגיל. מומלץ לתרגל פעמיים בשנה — אפשר להתחיל עכשיו ממסך הבית.</p></div>`}
+
+    <button class="btn btn-ghost" onclick="go('profile')">${I.back} חזרה לפרופיל</button>
+  </div>`;
+};
+function postAnnouncement(){
+  const v=document.getElementById('ann-in').value.trim();
+  if(!v){ toast('כתבו את ההודעה ואז פרסמו'); return; }
+  S.posts.unshift({id:S.nextPost++, who:'ועד הבניין', apt:'', cat:'הודעה', catTag:'tag-blue', official:true, time:'עכשיו', text:v, act:'קיבלתי, תודה', done:false, replies:[]});
+  toast('ההודעה פורסמה לכל הדיירים ✓'); render();
+}
+function fixFault(id){
+  const f=S.faults.find(x=>x.id===id); if(!f)return;
+  f.status='טופל';
+  toast('סומן כטופל — המדווח קיבל עדכון'); render();
+}
+function resetAll(){ S.simTimers.forEach(clearTimeout); S.rTimers.forEach(clearTimeout); S=freshState(); render(); }
+
+/* ============ חירום ============ */
+function openEmgConfirm(){
+  openModal(`<div class="stack-lg">
+    <h2>הפעלת מצב חירום</h2>
+    <p class="sub">כל דיירי הבניין יקבלו התראה ויתבקשו לדווח על מצבם. הממשק יעבור למצב חירום עד לסיום האירוע.</p>
+    <div class="card stack" style="background:var(--orange-soft); border-color:#EFCFA8">
+      <b style="color:var(--orange-ink)">רגע לפני —</b>
+      <p class="small" style="color:var(--orange-ink)">בסכנת חיים מתקשרים קודם: משטרה 100 · מד״א 101 · כיבוי 102. האפליקציה מארגנת את הבניין, היא לא מזעיקה כוחות.</p>
+    </div>
+    <button class="btn btn-red" onclick="startEmergency(false)">${I.shield} הפעלת אירוע אמת</button>
+    <button class="btn btn-orange" onclick="startEmergency(true)">הפעלת תרגיל מוכנות (מומלץ להדגמה)</button>
+    <button class="btn-quiet" style="align-self:center" onclick="closeModal()">ביטול</button>
+  </div>`);
+}
+
+function startEmergency(drill){
+  closeModal();
+  S.mode='emergency'; S.drill=drill; S.emgStart=nowHM(); S.myStatus=null;
+  S.aptStatus={}; S.requests=[]; S.updates=[]; S.eventLog=[]; S.summary=null;
+  S.tasks = S.tasks.filter(t=>t.kind==='borrow');
+  pushUpdate('האירוע נפתח. כל הדיירים מתבקשים לדווח על מצבם במסך הדיווח.');
+  logEv('האירוע הופעל');
+  go('ereport');
+  runSimulation();
+}
+function pushUpdate(text){ S.updates.unshift({text, time:nowHM()}); }
+function logEv(t){ S.eventLog.push({t, time:Date.now()}); }
+
+/* סימולציית "בניין חי" */
+function sim(ms, fn){ S.simTimers.push(setTimeout(()=>{ if(S.mode!=='emergency')return; fn(); render(); }, ms)); }
+function rsim(ms, fn){ S.rTimers.push(setTimeout(()=>{ if(S.mode!=='routine'||!S.joined)return; fn(); render(); }, ms)); }
+function runSimulation(){
+  sim(2500, ()=>{ S.aptStatus[3]='ok'; toast('יוסי אברהם (דירה 3) דיווח: בסדר'); });
+  sim(5000, ()=>{ [1,4,10].forEach(n=>S.aptStatus[n]='ok'); });
+  sim(8000, ()=>{
+    S.aptStatus[6]='help';
+    S.requests.unshift({id:S.nextReq++, apt:6, who:'רחל גולן', type:'סיוע פיזי', urg:'בהקדם', urgTag:'tag-orange',
+      text:'זקוקה לעזרה לרדת במדרגות — קשיי ניידות. נמצאת לבד בדירה.', status:'התקבלה', assignee:null, time:nowHM()});
+    toast('רחל גולן (דירה 6) מבקשת עזרה');
+  });
+  sim(11000, ()=>{ [2,7,11].forEach(n=>S.aptStatus[n]='ok'); S.aptStatus[12]='away'; });
+  sim(14000, ()=>{ S.aptStatus[9]='ok'; S.aptStatus[5]='ok'; pushUpdate('סריקה ראשונית: אין נזק מבני נראה לעין. נא להישאר זמינים לעדכונים.'); });
+  sim(18000, ()=>{
+    S.tasks.unshift({id:S.nextTask++, kind:'emg', title:'בדיקת דירה 4 — משפחת כהן', sub:'טרם דיווחו. לדפוק בדלת ולוודא שהכול תקין.', status:'open', urgTag:'tag-orange', urg:'בהקדם'});
+    S.aptStatus[4]=undefined; delete S.aptStatus[4];
+    toast('קיבלתם משימה: בדיקת דירה 4', null);
+  });
+}
+
+/* --- דיווח --- */
+SCREENS.ereport = () => `
+<div class="stack-lg" style="min-height:100%">
+  <div><h2>מה מצבכם?</h2><p class="sub">דיווח אחד — וכל הבניין יודע שאתם בסדר. אפשר לעדכן בכל רגע.</p></div>
+  <button class="btn btn-green btn-big" onclick="reportOk()">${IL('check')} אנחנו בסדר<span class="hint">כולם בדירה בטוחים ושלמים</span></button>
+  <button class="btn btn-orange btn-big" onclick="startHelp()">${IL('hand')} צריכים עזרה<span class="hint">לא מצב חירום, אבל צריכים סיוע</span></button>
+  <button class="btn btn-red btn-big" onclick="go('edanger')">${IL('alert')} מצב חירום<span class="hint">סכנה מיידית — נדרשת עזרה דחופה</span></button>
+  ${S.myStatus?`<div class="card row" style="margin-top:auto">
+      <span class="tag ${STATUS_META[S.myStatus].tag}" style="width:34px;height:34px;justify-content:center;border-radius:10px">${STATUS_META[S.myStatus].icon}</span>
+      <div style="flex:1"><b>הדיווח האחרון שלכם: ${STATUS_META[S.myStatus].label}</b><div class="small">דירה ${S.onb.apt} · עודכן ${nowHM()}</div></div>
+    </div>`:''}
+</div>`;
+
+function reportOk(){
+  const prev=S.myStatus;
+  S.myStatus='ok'; S.aptStatus[S.onb.apt]='ok'; logEv('דיווח עצמי: בסדר');
+  go('eok');
+  toast('הדיווח נקלט — תודה!', ()=>{S.myStatus=prev; if(prev)S.aptStatus[S.onb.apt]=prev; else delete S.aptStatus[S.onb.apt]; go('ereport');});
+}
+SCREENS.eok = () => `
+<div class="stack-lg center" style="min-height:100%; justify-content:center">
+  <div style="width:86px;height:86px;border-radius:50%;background:var(--green-soft);color:var(--green);display:flex;align-items:center;justify-content:center">${IL('check')}</div>
+  <h2>הדיווח נקלט ✓</h2>
+  <p class="sub" style="max-width:280px">דירה ${S.onb.apt} מסומנת עכשיו כ"בסדר" — ${S.onb.people} נפשות. הוועד והשכנים רואים את זה.</p>
+  <p class="small">המצב השתנה? אפשר לעדכן בכל רגע.</p>
+  <div class="stack" style="width:100%; max-width:300px">
+    <button class="btn btn-primary" onclick="go('estatus')">מה קורה בבניין ←</button>
+    <button class="btn btn-ghost" onclick="go('ereport')">עדכון הדיווח</button>
+  </div>
+</div>`;
+
+/* --- צריכים עזרה: 3 שלבים --- */
+function startHelp(){ S.helpDraft={step:1,type:'',urg:'',text:'',people:1}; go('ehelp'); }
+SCREENS.ehelp = () => {
+  const d=S.helpDraft;
+  const dots=`<div class="row-between"><button class="btn-quiet" onclick="helpBack()">${I.back} חזרה</button><span class="small">שלב ${d.step} מתוך 3</span></div>
+  <div class="progress"><div style="width:${d.step*33.4}%"></div></div>`;
+  if(d.step===1){
+    const types=[['רפואי','heart'],['מים / מזון / תרופות','box'],['סיוע פיזי','hand'],['תמיכה נפשית','people'],['אחר','msg']];
+    return `<div class="stack-lg">${dots}
+      <h2>איזו עזרה צריכים?</h2>
+      <div class="stack">${types.map(([t,ic])=>`<button class="card row" style="width:100%; ${d.type===t?'border-color:var(--orange); background:var(--orange-soft)':''}" onclick="S.helpDraft.type='${t}';S.helpDraft.step=2;render()">
+        <span class="qicon" style="background:var(--orange-soft);color:var(--orange-ink)">${I[ic]}</span><b>${t}</b></button>`).join('')}</div>
+    </div>`;
+  }
+  if(d.step===2){
+    const urgs=[['יכול לחכות','נטפל בהקדם, אין לחץ','tag-gray'],['בהקדם','בשעה הקרובה','tag-orange'],['דחוף','צריך מישהו עכשיו','tag-red']];
+    return `<div class="stack-lg">${dots}
+      <h2>כמה זה דחוף?</h2>
+      <div class="stack">${urgs.map(([u,s,tg])=>`<button class="card row-between" style="width:100%; ${d.urg===u?'border-color:var(--orange); background:var(--orange-soft)':''}" onclick="S.helpDraft.urg='${u}';S.helpDraft.step=3;render()">
+        <div><b>${u}</b><div class="small">${s}</div></div><span class="tag ${tg}">${u}</span></button>`).join('')}</div>
+    </div>`;
+  }
+  return `<div class="stack-lg">${dots}
+    <h2>עוד כמה פרטים</h2>
+    <div class="row"><span class="tag tag-orange">${esc(d.type)}</span><span class="tag ${d.urg==='דחוף'?'tag-red':d.urg==='בהקדם'?'tag-orange':'tag-gray'}">${esc(d.urg)}</span></div>
+    <div><label class="fld" for="h-txt">מה קורה? (כמה מילים מספיקות)</label>
+      <textarea id="h-txt" rows="3" placeholder="לדוגמה: נגמרו התרופות של סבתא, צריך מישהו עם רכב">${esc(d.text)}</textarea></div>
+    <div><label class="fld" for="h-pp">כמה אנשים צריכים עזרה?</label>
+      <select id="h-pp">${[1,2,3,4,5].map(n=>`<option ${n===d.people?'selected':''}>${n}</option>`).join('')}</select></div>
+    <button class="btn btn-orange" onclick="submitHelp()">${I.send} שליחת הבקשה לבניין</button>
+  </div>`;
+};
+function helpBack(){ const d=S.helpDraft; if(d.step>1){d.step--; render();} else go('ereport'); }
+function submitHelp(){
+  const d=S.helpDraft;
+  d.text=document.getElementById('h-txt').value.trim()||'(ללא פירוט)';
+  d.people=+document.getElementById('h-pp').value;
+  S.myStatus='help'; S.aptStatus[S.onb.apt]='help';
+  const id=S.nextReq++;
+  S.requests.unshift({id, apt:S.onb.apt, who:S.onb.name, mine:true, type:d.type,
+    urg:d.urg, urgTag:d.urg==='דחוף'?'tag-red':d.urg==='בהקדם'?'tag-orange':'tag-gray',
+    text:d.text, status:'התקבלה', assignee:null, time:nowHM()});
+  logEv('נשלחה בקשת עזרה: '+d.type);
+  go('emyrequest');
+  toast('הבקשה נשלחה — הוועד והמתנדבים רואים אותה');
+  sim(6000, ()=>{ const r=S.requests.find(x=>x.id===id); if(r&&!r.assignee){r.assignee='יוסי אברהם · דירה 3'; r.status='מתנדב בדרך'; toast('יוסי אברהם קיבל את הבקשה שלכם ובדרך אליכם');} });
+}
+SCREENS.emyrequest = () => {
+  const r=S.requests.find(x=>x.mine);
+  if(!r) return SCREENS.ereport();
+  const steps=['התקבלה','מתנדב בדרך','בטיפול','טופלה'];
+  const idx=steps.indexOf(r.status);
+  return `<div class="stack-lg">
+    <h2>הבקשה שלכם</h2>
+    <div class="card stack">
+      <div class="row"><span class="tag tag-orange">${esc(r.type)}</span><span class="tag ${r.urgTag}">${esc(r.urg)}</span><span class="small" style="margin-inline-start:auto">${r.time}</span></div>
+      <p>${esc(r.text)}</p>
+      <div class="divider"></div>
+      <div class="stack" style="gap:9px">
+        ${steps.map((s,i)=>`<div class="row">
+          <span class="tag ${i<=idx?'tag-green':'tag-gray'}" style="width:26px;height:26px;justify-content:center;border-radius:8px">${i<=idx?I.check:''}</span>
+          <span style="${i<=idx?'font-weight:700':'color:var(--ink-3)'}">${s}</span>
+          ${i===1&&r.assignee?`<span class="small" style="margin-inline-start:auto">${esc(r.assignee)}</span>`:''}
+        </div>`).join('')}
+      </div>
+    </div>
+    ${r.assignee?`<div class="card row" style="background:var(--green-soft); border-color:#BBDCC2">
+      <span class="avatar" style="background:var(--green);color:#fff">${initials(r.assignee)}</span>
+      <div style="flex:1"><b style="color:var(--green-ink)">${esc(r.assignee.split('·')[0])} בדרך אליכם</b><div class="small" style="color:var(--green-ink)">${esc(r.assignee)}</div></div>
+      <button class="chip" onclick="toast('חיוג... (הדגמה)')">${I.phone}</button>
+    </div>`:`<p class="small center">הוועד רואה את הבקשה ומחפש מתנדב מתאים. נעדכן ברגע שמישהו בדרך.</p>`}
+    <button class="btn btn-ghost" onclick="cancelMyRequest()">הבעיה נפתרה — סגירת הבקשה</button>
+    <button class="btn-quiet" style="align-self:center" onclick="go('estatus')">למצב הבניין ←</button>
+  </div>`;
+};
+function cancelMyRequest(){
+  const r=S.requests.find(x=>x.mine);
+  if(r){r.status='טופלה';}
+  S.myStatus='ok'; S.aptStatus[S.onb.apt]='ok';
+  toast('הבקשה נסגרה. שמחים שהסתדר! סומנתם כ"בסדר".');
+  go('estatus');
+}
+
+/* --- מצב חירום אישי --- */
+SCREENS.edanger = () => `
+<div class="stack-lg" style="min-height:100%">
+  <button class="btn-quiet" onclick="go('ereport')" style="align-self:flex-start">${I.back} חזרה</button>
+  <div class="card stack" style="background:var(--red-soft); border-color:#EDBBBB">
+    <b style="color:var(--red-ink); font-size:18px">קודם כול — שירותי החירום</b>
+    <p style="color:var(--red-ink)">בסכנת חיים, השיחה הראשונה היא אליהם:</p>
+    <div class="grid2" style="grid-template-columns:1fr 1fr 1fr; gap:8px">
+      ${[['משטרה','100'],['מד״א','101'],['כיבוי','102']].map(([n,d])=>`
+      <button class="card center stack" style="gap:2px; padding:12px 6px; border-color:#EDBBBB" onclick="toast('חיוג ${d}... (הדגמה)')">
+        <b style="font-size:22px; color:var(--red); font-variant-numeric:tabular-nums">${d}</b><span class="small">${n}</span></button>`).join('')}
+    </div>
+  </div>
+  <div class="card stack">
+    <b>ובמקביל — דווחו לבניין</b>
+    <p class="sub">הדיווח מקפיץ את הרכז ואת המתנדבים הקרובים אליכם, עוד לפני שהכוחות מגיעים.</p>
+    <button class="btn btn-red" onclick="reportDanger()">${I.alert} דיווח מצוקה לבניין</button>
+  </div>
+</div>`;
+function reportDanger(){
+  S.myStatus='danger'; S.aptStatus[S.onb.apt]='danger'; logEv('דיווח מצוקה');
+  pushUpdate(`דירה ${S.onb.apt} דיווחה על מצוקה. רכז ומתנדבים הוקפצו.`);
+  toast('הדיווח התקבל. מתנדב קרוב הוקפץ אליכם.');
+  go('estatus');
+  sim(5000, ()=>{ toast('מאיה ניסים (דירה 11, אחות) בדרך אליכם'); });
+}
+
+/* --- מצב הבניין --- */
+SCREENS.estatus = () => {
+  const counts={ok:0,help:0,danger:0,away:0,none:0};
+  APTS.forEach(a=>counts[stOf(a.n)]++);
+  const totalPeople = APTS.reduce((s,a)=>s+(stOf(a.n)==='ok'?a.people:0),0);
+  const openReqs = S.requests.filter(r=>r.status!=='טופלה').length;
+  const openTasks = S.tasks.filter(t=>t.kind==='emg'&&t.status!=='done').length;
+  const floors=[...new Set(APTS.map(a=>a.floor))].sort((a,b)=>b-a);
+  return `<div class="stack-lg">
+    <div class="row-between"><h2>מצב הבניין</h2><span class="small">עודכן ${nowHM()}</span></div>
+
+    ${S.myStatus?`<button class="card row" style="width:100%" onclick="go('ereport')">
+      <span class="tag ${STATUS_META[S.myStatus].tag}" style="width:38px;height:38px;justify-content:center;border-radius:11px">${STATUS_META[S.myStatus].icon}</span>
+      <div style="flex:1"><b>אתם: ${STATUS_META[S.myStatus].label}</b><div class="small">דירה ${S.onb.apt} · לעדכון — לחצו כאן</div></div>
+    </button>`
+    :`<button class="card row" style="width:100%; border-color:var(--orange); background:var(--orange-soft)" onclick="go('ereport')">
+      <span style="color:var(--orange-ink)">${I.bell}</span>
+      <b style="color:var(--orange-ink); flex:1">עוד לא דיווחתם — לחצו לדיווח מהיר</b>
+    </button>`}
+
+    <div class="counters">
+      ${counter(counts.ok,'בסדר','st-ok')}
+      ${counter(counts.help,'צריכים עזרה','st-help')}
+      ${counter(counts.danger,'מצוקה','st-danger')}
+      ${counter(counts.none,'לא דיווחו','st-none')}
+      ${counter(counts.away,'לא בבניין','st-away')}
+      ${counter(totalPeople,'נפשות בטוחות','st-away')}
+    </div>
+
+    <div class="card stack">
+      <div class="row-between"><b>מפת הבניין</b><span class="small">לחיצה על דירה — פרטים</span></div>
+      <div class="bmap">
+        ${floors.map(f=>`<div class="floor-label">קומה ${f}</div>`+
+          APTS.filter(a=>a.floor===f).map(a=>{
+            const st=stOf(a.n), m=STATUS_META[st];
+            return `<button class="bapt ${m.cls}" onclick="openApt(${a.n})" aria-label="דירה ${a.n}: ${m.label}">
+              <span class="num">${a.n}${a.me?' ★':''}</span><span class="st">${m.label}</span></button>`;
+          }).join('')).join('')}
+      </div>
+      <div class="row" style="flex-wrap:wrap; gap:6px">
+        ${Object.entries(STATUS_META).map(([k,m])=>`<span class="tag ${m.tag}">${m.label}</span>`).join('')}
+      </div>
+    </div>
+
+    <div class="grid2">
+      <button class="card stack" style="gap:4px" onclick="go('erequests')"><b style="font-size:22px; font-variant-numeric:tabular-nums">${openReqs}</b><span class="small">בקשות פתוחות ←</span></button>
+      <button class="card stack" style="gap:4px" onclick="go('etasks')"><b style="font-size:22px; font-variant-numeric:tabular-nums">${openTasks}</b><span class="small">משימות פתוחות ←</span></button>
+    </div>
+
+    <div class="card stack">
+      <b>כוחות זמינים בבניין</b>
+      ${(()=>{ const avail=APTS.filter(a=>!a.me&&stOf(a.n)==='ok'&&(a.skills.length||a.equip.length));
+        return avail.length? avail.map(a=>`<div class="row" style="gap:9px">
+          <span class="avatar" style="width:32px;height:32px;font-size:12px;background:var(--green-soft);color:var(--green-ink)">${initials(a.name)}</span>
+          <div style="flex:1; font-size:14px"><b>${esc(a.name)}</b> <span class="small">· דירה ${a.n}</span>
+            <div class="small">${[...a.skills,...a.equip].join(' · ')}</div></div>
+        </div>`).join('')
+        : '<p class="small">כשדיירים ידווחו "בסדר", המיומנויות והציוד שלהם יופיעו כאן — מוכנים לפעולה.</p>'; })()}
+    </div>
+
+    ${S.coordinator?`<div class="card stack" style="border-color:var(--blue)">
+      <b>ניהול האירוע (רכז)</b>
+      <p class="small">כשכל הדירות מטופלות והבקשות סגורות — אפשר לסיים.</p>
+      <button class="btn btn-primary" onclick="confirmEndEvent()">סיום האירוע והפקת סיכום</button>
+    </div>`
+    :`<p class="small center">ניהול מלא של האירוע זמין לרכז — אפשר להפעיל "תצוגת רכז" בפרופיל (בשגרה) או כאן: <button class="btn-quiet" onclick="S.coordinator=true;render()" style="padding:2px 6px">הפעלה להדגמה</button></p>`}
+  </div>`;
+};
+const counter=(n,t,cls)=>`<div class="counter ${cls}"><div class="n">${n}</div><div class="t">${t}</div></div>`;
+
+function openApt(n){
+  const a=APTS.find(x=>x.n===n), st=stOf(n), m=STATUS_META[st];
+  openModal(`<div class="stack-lg">
+    <div class="row-between"><h2>דירה ${n} · קומה ${a.floor}</h2><span class="tag ${m.tag}">${m.icon} ${m.label}</span></div>
+    <div class="card stack" style="gap:8px">
+      <b>${esc(a.name)}${a.me?' (אתם)':''}</b>
+      <div class="small">${a.people} נפשות${a.note?' · '+esc(a.note):''}</div>
+      ${a.skills.length?`<div class="chips">${a.skills.map(s=>`<span class="tag tag-blue">${s}</span>`).join('')}</div>`:''}
+      ${a.equip.length?`<div class="small">ציוד: ${a.equip.join(', ')}</div>`:''}
+      ${a.needs?`<div class="card" style="background:var(--orange-soft); border-color:#EFCFA8; padding:10px"><span class="small" style="color:var(--orange-ink)"><b>צרכים מיוחדים:</b> ${esc(a.needs)}</span></div>`:''}
+    </div>
+    ${st==='none'&&!a.me?`<div class="stack">
+      <button class="btn btn-primary" onclick="toast('חיוג ל${esc(a.name)}... (הדגמה)')">${I.phone} התקשרות</button>
+      ${S.coordinator?`<button class="btn btn-ghost" onclick="assignCheckTask(${n})">שליחת מתנדב לבדיקה</button>`:''}
+    </div>`:''}
+    ${(st==='help'||st==='danger')&&!a.me&&S.coordinator?`<button class="btn btn-orange" onclick="closeModal();go('erequests')">לבקשת העזרה ←</button>`:''}
+    <button class="btn-quiet" style="align-self:center" onclick="closeModal()">סגירה</button>
+  </div>`);
+}
+function assignCheckTask(n){
+  const a=APTS.find(x=>x.n===n);
+  S.tasks.unshift({id:S.nextTask++, kind:'emg', title:`בדיקת דירה ${n} — ${a.name}`, sub:'טרם דיווחו. לדפוק בדלת ולוודא שהכול תקין.', status:'open', urgTag:'tag-orange', urg:'בהקדם'});
+  closeModal(); toast(`נוצרה משימת בדיקה לדירה ${n}`); render();
+}
+
+/* --- בקשות --- */
+SCREENS.erequests = () => {
+  const reqs=S.requests;
+  return `<div class="stack-lg">
+    <h2>בקשות עזרה</h2>
+    ${reqs.length? `<div class="stack">${reqs.map(reqCard).join('')}</div>`
+    : `<div class="card center stack" style="padding:34px 16px">
+        <span style="color:var(--green)">${IL('check')}</span><b>אין בקשות פתוחות</b>
+        <p class="small">כרגע אף אחד בבניין לא ביקש עזרה. זה טוב.</p></div>`}
+    ${S.myStatus!=='help'?`<button class="btn btn-orange" onclick="startHelp()">${I.hand} אנחנו צריכים עזרה</button>`:''}
+  </div>`;
+};
+function reqCard(r){
+  const closed=r.status==='טופלה';
+  return `<div class="card stack" style="${closed?'opacity:.65':''}">
+    <div class="row">
+      <span class="avatar" style="background:var(--orange-soft);color:var(--orange-ink)">${initials(r.who)}</span>
+      <div style="flex:1"><b>${esc(r.who)}</b> <span class="small">· דירה ${r.apt} · ${r.time}</span></div>
+      <span class="tag ${r.urgTag}">${esc(r.urg)}</span>
+    </div>
+    <p style="font-size:15px">${esc(r.text)}</p>
+    <div class="row-between">
+      <span class="tag ${closed?'tag-green':r.assignee?'tag-blue':'tag-gray'}">${closed?I.check+' טופלה':esc(r.status)}${r.assignee&&!closed?' · '+esc(r.assignee.split('·')[0]):''}</span>
+      ${!closed&&!r.assignee&&S.coordinator?`<button class="chip on" onclick="openAssign(${r.id})">הקצאת מתנדב</button>`:''}
+      ${!closed&&!r.assignee&&!S.coordinator&&!r.mine?`<button class="chip" onclick="volunteerSelf(${r.id})">אני אטפל בזה</button>`:''}
+      ${!closed&&r.assignee&&S.coordinator?`<button class="chip" onclick="closeReq(${r.id})">סימון כטופלה</button>`:''}
+    </div>
+  </div>`;
+}
+function volunteerSelf(id){
+  const r=S.requests.find(x=>x.id===id); if(!r)return;
+  r.assignee=`${S.onb.name} · דירה ${S.onb.apt}`; r.status='מתנדב בדרך';
+  S.tasks.unshift({id:S.nextTask++, kind:'emg', reqId:id, title:`${r.type} — ${r.who}, דירה ${r.apt}`, sub:r.text, status:'open', urgTag:r.urgTag, urg:r.urg});
+  logEv('התנדבות עצמית לבקשה');
+  toast('קיבלתם על עצמכם את המשימה 💪 היא מחכה במסך המשימות', ()=>{r.assignee=null;r.status='התקבלה';S.tasks.shift();});
+  render();
+}
+function openAssign(id){
+  const r=S.requests.find(x=>x.id===id); if(!r)return;
+  const need = r.type==='רפואי'?'עזרה ראשונה': r.type==='סיוע פיזי'?'הרמה וסחיבה': r.type==='תמיכה נפשית'?'תמיכה רגשית':null;
+  const cands = APTS.filter(a=>!a.me&&a.n!==r.apt&&stOf(a.n)==='ok')
+    .map(a=>{
+      let score=0, why=[];
+      if(need&&a.skills.includes(need)){score+=2; why.push(need);}
+      if(a.skills.includes('עזרה ראשונה')&&r.type!=='רפואי'){score+=1;}
+      const d=Math.abs(a.floor-APTS.find(x=>x.n===r.apt).floor);
+      score+= (2-Math.min(d,2))*.5; why.push(d===0?'אותה קומה':`${d} קומות משם`);
+      return {a,score,why};
+    }).sort((x,y)=>y.score-x.score).slice(0,4);
+  openModal(`<div class="stack-lg">
+    <h2>מי הכי מתאים לעזור?</h2>
+    <p class="sub">מיינו לפי מיומנות וקרבה. ההחלטה תמיד שלכם — לא של המערכת.</p>
+    <div class="stack">${cands.map(c=>`<button class="card row" style="width:100%" onclick="assignTo(${id},${c.a.n})">
+      <span class="avatar">${initials(c.a.name)}</span>
+      <div style="flex:1"><b>${esc(c.a.name)}</b><div class="small">דירה ${c.a.n} · ${c.why.join(' · ')}</div></div>
+      ${c.score>=2?'<span class="tag tag-green">התאמה גבוהה</span>':''}
+    </button>`).join('')}</div>
+    <button class="btn-quiet" style="align-self:center" onclick="closeModal()">ביטול</button>
+  </div>`);
+}
+function assignTo(reqId, aptN){
+  const r=S.requests.find(x=>x.id===reqId), a=APTS.find(x=>x.n===aptN);
+  r.assignee=`${a.name} · דירה ${a.n}`; r.status='מתנדב בדרך';
+  logEv(`הוקצה מתנדב: ${a.name}`);
+  closeModal(); toast(`${a.name} קיבלו הודעה ויצאו לדרך`);
+  if(r.mine){} render();
+  sim(7000, ()=>{ if(r.status==='מתנדב בדרך'){r.status='בטיפול';} });
+}
+function closeReq(id){
+  const r=S.requests.find(x=>x.id===id); if(!r)return;
+  r.status='טופלה'; S.aptStatus[r.apt]='ok'; logEv('בקשה נסגרה');
+  toast(`הבקשה של ${r.who} סומנה כטופלה ✓`); render();
+}
+
+/* --- משימות (חירום) --- */
+SCREENS.etasks = () => {
+  const tasks=S.tasks.filter(t=>t.kind==='emg');
+  return `<div class="stack-lg">
+    <h2>המשימות שלי</h2>
+    <p class="sub">משימות שקיבלתם או לקחתם על עצמכם באירוע הנוכחי.</p>
+    ${tasks.length? `<div class="stack">${tasks.map(taskCard).join('')}</div>`
+    : `<div class="card center stack" style="padding:34px 16px">
+        <span style="color:var(--ink-3)">${IL('tasks')}</span><b>אין משימות כרגע</b>
+        <p class="small" style="max-width:250px">אפשר לעזור: במסך הבקשות לוחצים "אני אטפל בזה" על בקשה פתוחה.</p>
+        <button class="btn btn-ghost" onclick="go('erequests')">לבקשות הפתוחות ←</button></div>`}
+  </div>`;
+};
+function taskCard(t){
+  const st=t.status;
+  return `<div class="card stack" style="${st==='done'?'opacity:.65':''}">
+    <div class="row-between"><b>${esc(t.title)}</b><span class="tag ${t.urgTag}">${esc(t.urg)}</span></div>
+    <p class="small">${esc(t.sub)}</p>
+    <div class="row">
+      ${st==='open'?`<button class="btn btn-primary" style="min-height:46px; font-size:15px" onclick="taskGo(${t.id})">יוצאים לדרך</button>
+        <button class="chip" onclick="taskDrop(${t.id})">לא יכולים</button>`:''}
+      ${st==='going'?`<span class="tag tag-blue">בדרך…</span>
+        <button class="btn btn-green" style="min-height:46px; font-size:15px" onclick="taskDone(${t.id})">${I.check} טופל</button>`:''}
+      ${st==='done'?`<span class="tag tag-green">${I.check} הושלם — תודה!</span>`:''}
+    </div>
+  </div>`;
+}
+function taskGo(id){ const t=S.tasks.find(x=>x.id===id); t.status='going';
+  if(t.reqId){const r=S.requests.find(x=>x.id===t.reqId); if(r)r.status='בטיפול';}
+  toast('סימנו שאתם בדרך. השאר רואים את זה.'); render(); }
+function taskDone(id){
+  const t=S.tasks.find(x=>x.id===id); t.status='done'; logEv('משימה הושלמה: '+t.title);
+  if(t.reqId){const r=S.requests.find(x=>x.id===t.reqId); if(r){r.status='טופלה'; S.aptStatus[r.apt]='ok';}}
+  if(t.title.includes('דירה 4')){ S.aptStatus[4]='ok'; pushUpdate('דירה 4 נבדקה על ידי מתנדב — הכול תקין.'); }
+  toast('כל הכבוד! המשימה הושלמה ✓'); render();
+}
+function taskDrop(id){ const t=S.tasks.find(x=>x.id===id);
+  toast('בסדר גמור. המשימה חזרה לרכז לשיבוץ מחדש.', ()=>{S.tasks.unshift(t);render();});
+  S.tasks=S.tasks.filter(x=>x.id!==id); render(); }
+
+/* --- עדכונים רשמיים --- */
+SCREENS.eupdates = () => `
+<div class="stack-lg">
+  <h2>עדכונים רשמיים</h2>
+  <p class="sub">רק מידע מאומת מהוועד ומהרכז. בלי שמועות.</p>
+  ${S.coordinator?`<div class="card row" style="gap:8px; padding:8px 12px">
+    <input id="upd-in" placeholder="עדכון חדש לדיירים..." style="border:none; background:none; padding:9px 0">
+    <button class="chip on" style="flex:none" onclick="postUpdate()">פרסום</button></div>`:''}
+  <div class="stack">
+    ${S.updates.map(u=>`<div class="card row" style="align-items:flex-start">
+      <span class="qicon" style="width:38px;height:38px;border-radius:11px;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;flex:none">${I.home}</span>
+      <div><b>ועד הבניין</b> <span class="small">· ${u.time}</span><p style="font-size:15px; margin-top:3px">${esc(u.text)}</p></div>
+    </div>`).join('')}
+  </div>
+</div>`;
+function postUpdate(){
+  const v=document.getElementById('upd-in').value.trim();
+  if(!v){toast('כתבו את העדכון ואז פרסמו');return;}
+  pushUpdate(v); toast('העדכון נשלח לכל הדיירים'); render();
+}
+
+/* --- סיום אירוע וסיכום --- */
+function confirmEndEvent(){
+  const unre=APTS.filter(a=>stOf(a.n)==='none').length;
+  const openR=S.requests.filter(r=>r.status!=='טופלה').length;
+  openModal(`<div class="stack-lg">
+    <h2>לסיים את האירוע?</h2>
+    ${unre||openR?`<div class="card" style="background:var(--orange-soft); border-color:#EFCFA8">
+      <b style="color:var(--orange-ink)">שימו לב:</b>
+      <p class="small" style="color:var(--orange-ink)">${unre?`${unre} דירות עדיין לא דיווחו. `:''}${openR?`${openR} בקשות עדיין פתוחות.`:''}</p>
+    </div>`:`<p class="sub">כל הדירות דיווחו וכל הבקשות טופלו. אפשר לסיים בראש שקט.</p>`}
+    <p class="sub">כל הדיירים יקבלו הודעת סיום, והמערכת תפיק סיכום אירוע.</p>
+    <button class="btn btn-primary" onclick="endEvent()">אישור סיום האירוע</button>
+    <button class="btn-quiet" style="align-self:center" onclick="closeModal()">עוד לא</button>
+  </div>`);
+}
+function endEvent(){
+  closeModal();
+  const counts={ok:0,help:0,danger:0,away:0,none:0};
+  APTS.forEach(a=>counts[stOf(a.n)]++);
+  S.summary={
+    name:S.emgName, drill:S.drill, start:S.emgStart, end:nowHM(),
+    reported: APTS.length-counts.none, total:APTS.length,
+    reqs:S.requests.length, reqsDone:S.requests.filter(r=>r.status==='טופלה').length,
+    tasksDone:S.tasks.filter(t=>t.kind==='emg'&&t.status==='done').length,
+    tasksAll:S.tasks.filter(t=>t.kind==='emg').length,
+    unreported: APTS.filter(a=>stOf(a.n)==='none').map(a=>`דירה ${a.n} (${a.name})`),
+  };
+  S.simTimers.forEach(clearTimeout); S.simTimers=[];
+  S.lastSummary=S.summary;
+  S.mode='routine'; S.myStatus=null;
+  S.posts.unshift({id:S.nextPost++, who:'ועד הבניין', apt:'', cat:'הודעה', catTag:'tag-blue', official:true, time:'עכשיו',
+    text:`${S.drill?'תרגיל':'אירוע'} ה${S.summary.name} הסתיים. תודה לכל מי שדיווח ועזר — סיכום מלא נשלח לכולם.`, act:'לצפייה בסיכום', done:false});
+  go('summary');
+}
+SCREENS.summary = () => {
+  const s=S.summary; if(!s) return SCREENS.home();
+  const pct=Math.round(s.reported/s.total*100);
+  return `<div class="stack-lg">
+    <div class="center stack" style="gap:6px; padding-top:10px">
+      <div style="width:74px;height:74px;border-radius:50%;background:var(--green-soft);color:var(--green);display:flex;align-items:center;justify-content:center">${IL('check')}</div>
+      <h1 style="font-size:23px">האירוע הסתיים</h1>
+      <p class="sub">${s.drill?'תרגיל':'אירוע'} ${esc(s.name)} · ${s.start}–${s.end}</p>
+    </div>
+    <div class="counters" style="grid-template-columns:1fr 1fr">
+      ${counter(pct+'%','מהדירות דיווחו','st-ok')}
+      ${counter(s.reqsDone+'/'+s.reqs,'בקשות טופלו','st-help')}
+      ${counter(s.tasksDone+'/'+s.tasksAll,'משימות הושלמו','st-away')}
+      ${counter(s.total-s.reported,'דירות ללא דיווח','st-none')}
+    </div>
+    ${s.unreported.length?`<div class="card stack">
+      <b>לתשומת לב הוועד</b>
+      <p class="small">לא התקבל דיווח מ: ${s.unreported.join(', ')}. מומלץ לוודא שהכול בסדר ולעדכן פרטי קשר.</p>
+    </div>`:''}
+    <div class="card stack">
+      <b>המלצות לשיפור</b>
+      <ul style="padding-inline-start:18px; font-size:14.5px; color:var(--ink-2); display:flex; flex-direction:column; gap:6px">
+        <li>לצרף את הדירות שטרם נרשמו לאפליקציה — כל דירה רשומה מקצרת את זמן התגובה.</li>
+        <li>למנות אחראי קומה לכל קומה, לבדיקה פיזית מהירה של מי שלא דיווח.</li>
+        <li>לקבוע תרגיל מוכנות פעמיים בשנה. הבניין שדיווח היום ב־${pct}% — ישתפר.</li>
+      </ul>
+    </div>
+    <button class="btn btn-primary" onclick="go('home')">חזרה לשגרה</button>
+  </div>`;
+};
+
+/* התחלה */
+render();
+</script>
