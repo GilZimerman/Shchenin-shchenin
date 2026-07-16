@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>טריוויה בדרכים 🚗 — גיל ואניה</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ===== מסך פתיחה / הגדרות פרופיל ===== -->
+<section id="screen-setup" class="screen">
+  <div class="card setup-card">
+    <h1>🚗 טריוויה בדרכים</h1>
+    <p class="subtitle">משחק טריוויה זוגי לנסיעה — עם מאגר שאלות אינסופי מבוסס AI</p>
+
+    <div class="form-grid">
+      <label>שם משתתף/ת 1 <input id="inp-p1" type="text" value="גיל"></label>
+      <label>שם משתתף/ת 2 <input id="inp-p2" type="text" value="אניה"></label>
+
+      <label>מי נוהג/ת עכשיו?
+        <select id="inp-driver">
+          <option value="p2" selected>אניה</option>
+          <option value="p1">גיל</option>
+          <option value="none">אף אחד (חניה/הפסקה)</option>
+        </select>
+      </label>
+
+      <label>כמה שנים יחד? <input id="inp-years" type="number" value="6" min="0"></label>
+
+      <label class="full">נושאים אהובים (מופרדים בפסיק)
+        <input id="inp-topics" type="text" value="ידע כללי, מכוניות, אופנה, ספורט, מכבי חיפה, גיאוגרפיה, תרבות, מוזיקה, קולנוע, אוכל, מדע">
+      </label>
+
+      <label class="full">נושאים שפחות מעניינים
+        <input id="inp-avoid" type="text" value="כלכלה, פוליטיקה, דת, שוק ההון, השקעות">
+      </label>
+
+      <label>רמת קושי
+        <select id="inp-difficulty">
+          <option value="light">קלילה</option>
+          <option value="varied" selected>מגוונת (לא מאתגרת מדי)</option>
+          <option value="hard">מאתגרת</option>
+        </select>
+      </label>
+
+      <label>שאלות אינטימיות?
+        <select id="inp-intimacy">
+          <option value="on" selected>כן — באלגנטיות ובתבונה</option>
+          <option value="off">לא, תודה</option>
+        </select>
+      </label>
+
+      <label>רמת נועזות
+        <select id="inp-intimacy-level">
+          <option value="flirty">פלרטטנית</option>
+          <option value="personal" selected>אישית עד נועזת</option>
+          <option value="daring">נועזת</option>
+        </select>
+      </label>
+    </div>
+
+    <details class="api-box">
+      <summary>🤖 מאגר שאלות אינסופי (Claude API)</summary>
+      <p>הדביקו מפתח API של Anthropic כדי ש-Claude ייצור שאלות חדשות ומותאמות אישית בלי סוף. בלי מפתח — המשחק ישתמש במאגר המובנה.</p>
+      <input id="inp-apikey" type="password" placeholder="sk-ant-...">
+      <p class="hint">המפתח נשמר רק בדפדפן שלכם (localStorage) ונשלח ישירות ל-Anthropic בלבד. מומלץ מפתח עם מגבלת תקציב.</p>
+    </details>
+
+    <button id="btn-start" class="btn primary big">יאללה, מתחילים! 🎉</button>
+  </div>
+</section>
+
+<!-- ===== תפריט משחקונים ===== -->
+<section id="screen-menu" class="screen hidden">
+  <header class="topbar">
+    <div class="scorebox" id="scorebox-menu"></div>
+    <div class="topbar-btns">
+      <button id="btn-tts" class="btn icon" title="הקראה קולית">🔊</button>
+      <button id="btn-settings" class="btn icon" title="הגדרות">⚙️</button>
+    </div>
+  </header>
+
+  <h2 class="menu-title">בוחרים משחקון 🎯</h2>
+  <p class="menu-sub" id="menu-greeting"></p>
+  <div id="game-grid" class="game-grid"></div>
+  <p class="ai-status" id="ai-status"></p>
+</section>
+
+<!-- ===== מסך משחק ===== -->
+<section id="screen-game" class="screen hidden">
+  <header class="topbar">
+    <div class="scorebox" id="scorebox-game"></div>
+    <button id="btn-quit" class="btn icon" title="חזרה לתפריט">🏠</button>
+  </header>
+
+  <div class="game-head">
+    <span id="game-type-badge" class="badge"></span>
+    <span id="q-counter" class="counter"></span>
+  </div>
+
+  <div class="card q-card">
+    <div id="q-target" class="q-target"></div>
+    <div id="q-category" class="q-category"></div>
+    <div id="q-text" class="q-text"></div>
+    <div id="q-clues" class="q-clues hidden"></div>
+    <div id="q-options" class="q-options hidden"></div>
+    <div id="q-answer" class="q-answer hidden"></div>
+    <div id="q-fact" class="q-fact hidden"></div>
+  </div>
+
+  <div id="game-actions" class="actions"></div>
+</section>
+
+<!-- ===== מסך סיום סבב ===== -->
+<section id="screen-result" class="screen hidden">
+  <div class="card result-card">
+    <div id="result-emoji" class="result-emoji">🏆</div>
+    <h2 id="result-title"></h2>
+    <p id="result-score" class="result-score"></p>
+    <div class="prize-box">
+      <h3>🎁 הפרס</h3>
+      <p id="result-prize"></p>
+    </div>
+    <div class="result-btns">
+      <button id="btn-again" class="btn primary">עוד סבב באותו משחקון 🔄</button>
+      <button id="btn-menu" class="btn">משחקון אחר 🎯</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== מסך טעינה ===== -->
+<div id="loading" class="loading hidden">
+  <div class="spinner"></div>
+  <p id="loading-text">Claude רוקח שאלות טריות בשבילכם... 🧪</p>
+</div>
+
+<!-- ===== הגדרות ===== -->
+<dialog id="dlg-settings">
+  <h3>⚙️ הגדרות</h3>
+  <label>מפתח Anthropic API
+    <input id="set-apikey" type="password" placeholder="sk-ant-...">
+  </label>
+  <label class="row"><input id="set-tts" type="checkbox"> הקראת שאלות בקול (לנהיגה בטוחה)</label>
+  <div class="dlg-btns">
+    <button id="set-save" class="btn primary">שמירה</button>
+    <button id="set-reset" class="btn danger">איפוס ניקוד ומשחק</button>
+    <button id="set-close" class="btn">סגירה</button>
+  </div>
+</dialog>
+
+<div id="toast" class="toast hidden"></div>
+
+<script src="js/questions.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
