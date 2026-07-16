@@ -1,0 +1,313 @@
+/* ===== טריוויה בדרכים — עיצוב ===== */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg1: #0f1b2d;
+  --bg2: #1b3a5c;
+  --card: #16283f;
+  --card-lite: #1f3553;
+  --accent: #35c98f;
+  --accent2: #ffb64c;
+  --pink: #ff6b9d;
+  --text: #f2f6fb;
+  --muted: #9db3c9;
+  --danger: #ff5f6b;
+}
+
+html, body {
+  height: 100%;
+  font-family: "Segoe UI", "Heebo", "Arial Hebrew", Arial, sans-serif;
+  background: linear-gradient(160deg, var(--bg1), var(--bg2));
+  color: var(--text);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.screen {
+  min-height: 100vh;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+}
+.hidden { display: none !important; }
+
+h1 { font-size: 2rem; margin-bottom: 4px; }
+h2 { font-size: 1.5rem; }
+.subtitle { color: var(--muted); margin-bottom: 20px; }
+
+/* ---- כרטיסים ---- */
+.card {
+  background: var(--card);
+  border-radius: 20px;
+  padding: 22px;
+  box-shadow: 0 8px 28px rgba(0,0,0,.35);
+}
+.setup-card { margin: auto 0; }
+
+/* ---- טפסים ---- */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.form-grid label { display: flex; flex-direction: column; gap: 5px; font-size: .9rem; color: var(--muted); }
+.form-grid label.full { grid-column: 1 / -1; }
+input, select {
+  padding: 11px 12px;
+  border-radius: 12px;
+  border: 1px solid #2d4a6b;
+  background: #0e1c30;
+  color: var(--text);
+  font-size: 1rem;
+  width: 100%;
+}
+input:focus, select:focus { outline: 2px solid var(--accent); }
+
+.api-box {
+  background: #0e1c30;
+  border-radius: 14px;
+  padding: 12px 14px;
+  margin-bottom: 16px;
+  border: 1px dashed #2d4a6b;
+}
+.api-box summary { cursor: pointer; font-weight: 600; }
+.api-box p { font-size: .85rem; color: var(--muted); margin: 8px 0; }
+.api-box .hint { font-size: .75rem; }
+
+/* ---- כפתורים ---- */
+.btn {
+  border: none;
+  border-radius: 14px;
+  padding: 13px 18px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: #29466b;
+  color: var(--text);
+  transition: transform .08s, filter .15s;
+}
+.btn:active { transform: scale(.97); }
+.btn.primary { background: var(--accent); color: #06281c; }
+.btn.warn { background: var(--accent2); color: #3a2600; }
+.btn.pink { background: var(--pink); color: #3d0a1e; }
+.btn.danger { background: var(--danger); color: #fff; }
+.btn.big { width: 100%; padding: 16px; font-size: 1.2rem; }
+.btn.icon { padding: 10px 13px; font-size: 1.2rem; }
+.btn:disabled { opacity: .45; cursor: default; }
+
+/* ---- סרגל עליון וניקוד ---- */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+  gap: 10px;
+}
+.topbar-btns { display: flex; gap: 8px; }
+.scorebox {
+  display: flex;
+  gap: 14px;
+  background: var(--card);
+  border-radius: 14px;
+  padding: 8px 16px;
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+.scorebox .p1 { color: var(--accent); }
+.scorebox .p2 { color: var(--accent2); }
+
+/* ---- תפריט משחקונים ---- */
+.menu-title { margin-bottom: 4px; }
+.menu-sub { color: var(--muted); margin-bottom: 16px; }
+.game-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.game-card {
+  background: var(--card);
+  border-radius: 18px;
+  padding: 18px 14px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: border .15s, transform .1s;
+  text-align: center;
+}
+.game-card:active { transform: scale(.97); }
+.game-card:hover { border-color: var(--accent); }
+.game-card .g-icon { font-size: 2rem; display: block; margin-bottom: 8px; }
+.game-card .g-name { font-weight: 700; font-size: 1.05rem; display: block; margin-bottom: 4px; }
+.game-card .g-desc { font-size: .78rem; color: var(--muted); line-height: 1.35; }
+.game-card.hot { border-color: rgba(255,107,157,.35); }
+.ai-status { text-align: center; color: var(--muted); font-size: .8rem; margin-top: 16px; }
+
+/* ---- מסך משחק ---- */
+.game-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.badge {
+  background: var(--card);
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: .9rem;
+}
+.counter { color: var(--muted); font-weight: 600; }
+
+.q-card { min-height: 300px; display: flex; flex-direction: column; gap: 14px; }
+.q-target {
+  font-weight: 800;
+  font-size: 1rem;
+  color: var(--accent2);
+}
+.q-category { color: var(--muted); font-size: .85rem; }
+.q-text { font-size: 1.45rem; font-weight: 700; line-height: 1.45; }
+
+.q-clues { display: flex; flex-direction: column; gap: 10px; }
+.clue {
+  background: #0e1c30;
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 1.1rem;
+  border-right: 4px solid var(--accent);
+}
+.clue .pts { color: var(--accent2); font-weight: 700; font-size: .85rem; }
+
+.q-options { display: flex; flex-direction: column; gap: 10px; }
+.q-options .opt {
+  background: #0e1c30;
+  border-radius: 12px;
+  padding: 14px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-align: center;
+  border: 1px solid #2d4a6b;
+}
+
+.q-answer {
+  background: rgba(53,201,143,.12);
+  border: 1px solid var(--accent);
+  border-radius: 14px;
+  padding: 14px;
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--accent);
+}
+.q-fact {
+  background: #0e1c30;
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: .95rem;
+  color: var(--muted);
+}
+.q-fact::before { content: "💡 "; }
+
+.q-sources {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: #0e1c30;
+  border-radius: 12px;
+  padding: 10px 14px;
+  border-right: 4px solid var(--accent2);
+}
+.q-sources .src-label { color: var(--muted); font-size: .8rem; font-weight: 700; }
+.q-sources a {
+  color: var(--accent);
+  font-size: .85rem;
+  text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.q-sources a:hover { text-decoration: underline; }
+
+/* ---- כפתורי פעולה ---- */
+.actions {
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.actions .wide { grid-column: 1 / -1; }
+
+/* ---- מסך תוצאה ---- */
+.result-card { margin: auto 0; text-align: center; }
+.result-emoji { font-size: 4rem; margin-bottom: 8px; }
+.result-score { color: var(--muted); font-size: 1.2rem; margin: 10px 0 18px; }
+.prize-box {
+  background: rgba(255,182,76,.1);
+  border: 1px solid var(--accent2);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+.prize-box h3 { color: var(--accent2); margin-bottom: 8px; }
+.prize-box p { font-size: 1.1rem; line-height: 1.5; }
+.result-btns { display: flex; flex-direction: column; gap: 10px; }
+
+/* ---- טעינה ---- */
+.loading {
+  position: fixed;
+  inset: 0;
+  background: rgba(10,18,30,.88);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  z-index: 50;
+}
+.spinner {
+  width: 54px; height: 54px;
+  border: 5px solid #2d4a6b;
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin .8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+#loading-text { color: var(--muted); font-size: 1.05rem; padding: 0 24px; text-align: center; }
+
+/* ---- דיאלוג ---- */
+dialog {
+  border: none;
+  border-radius: 20px;
+  background: var(--card);
+  color: var(--text);
+  padding: 22px;
+  width: min(92vw, 420px);
+  direction: rtl;
+}
+dialog::backdrop { background: rgba(0,0,0,.6); }
+dialog h3 { margin-bottom: 14px; }
+dialog label { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; font-size: .9rem; color: var(--muted); }
+dialog label.row { flex-direction: row; align-items: center; gap: 10px; font-size: 1rem; color: var(--text); }
+dialog label.row input { width: auto; }
+.dlg-btns { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+
+/* ---- טוסט ---- */
+.toast {
+  position: fixed;
+  bottom: 22px;
+  right: 50%;
+  transform: translateX(50%);
+  background: #0e1c30;
+  border: 1px solid var(--accent2);
+  color: var(--text);
+  padding: 12px 20px;
+  border-radius: 14px;
+  z-index: 60;
+  font-size: .95rem;
+  max-width: 90vw;
+  text-align: center;
+}
+
+@media (max-width: 420px) {
+  .form-grid { grid-template-columns: 1fr; }
+  .q-text { font-size: 1.25rem; }
+}
