@@ -19,6 +19,7 @@ let state = {
   profile: null,
   apiKey: "",
   tts: false,
+  grounding: true,   // אימות עובדות עם אסמכתאות מהרשת (כשיש מפתח API)
   scores: { p1: 0, p2: 0 },          // ניקוד מצטבר לכל הנסיעה
   usedQuestions: [],                  // טקסטים של שאלות שכבר נשאלו (למניעת חזרות)
   usedPrizes: [],
@@ -42,6 +43,7 @@ function toast(msg, ms = 3500) {
 function saveState() {
   localStorage.setItem(LS_KEY, JSON.stringify({
     profile: state.profile, apiKey: state.apiKey, tts: state.tts,
+    grounding: state.grounding,
     scores: state.scores, usedQuestions: state.usedQuestions.slice(-200),
     usedPrizes: state.usedPrizes, roundsPlayed: state.roundsPlayed,
   }));
@@ -91,8 +93,17 @@ const AI_SCHEMA = {
           category: { type: "string" },
           clues: { type: "array", items: { type: "string" } },
           options: { type: "array", items: { type: "string" } },
+          sources: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: { title: { type: "string" }, url: { type: "string" } },
+              required: ["title", "url"],
+              additionalProperties: false,
+            },
+          },
         },
-        required: ["question", "answer", "fact", "category", "clues", "options"],
+        required: ["question", "answer", "fact", "category", "clues", "options", "sources"],
         additionalProperties: false,
       },
     },
@@ -101,9 +112,14 @@ const AI_SCHEMA = {
   additionalProperties: false,
 };
 
-function buildSystemPrompt() {
+function buildSystemPrompt(grounded) {
   const p = state.profile;
   const intimacyLevels = { flirty: "פלרטטנית ועדינה", personal: "אישית עד נועזת, באלגנטיות", daring: "נועזת אך מכבדת" };
+  const groundingRules = grounded ? `
+- חובה: אמת כל עובדה בעזרת חיפוש ברשת לפני שאתה הופך אותה לשאלה.
+- לכל שאלה עובדתית צרף בשדה sources רשימה של 1-3 אסמכתאות מהחיפוש (title + url) שמאמתות את התשובה.
+- אם לא מצאת אסמכתא ברורה לעובדה — אל תשתמש בה. החלף אותה בעובדה אחרת שכן מצאת לה מקור.
+- העדף עובדות עדכניות ומעניינות שמצאת בחיפוש על פני ידע ישן מהזיכרון.` : "";
   return `אתה מחולל שאלות למשחק טריוויה זוגי שמשוחק בקול בזמן נסיעה ברכב.
 המשתתפים: ${p.p1} ו${p.p2}, זוג נשוי, יחד ${p.years} שנים. שניהם בגירים.
 
@@ -118,10 +134,10 @@ function buildSystemPrompt() {
 - גוון בין קטגוריות — אל תחזור על אותה קטגוריה פעמיים ברצף.
 - שדה fact: עובדה קצרה ומפתיעה שקשורה לתשובה.
 - שאלות אינטימיות (אם יתבקשו): ברמה ${intimacyLevels[p.intimacyLevel] || "אישית"}, בטון משחקי ומכבד, בלי לחץ ובלי להפוך תשובות למבחן של הקשר. בלי עידוד מגע בזמן נהיגה.
-- שדות שאינם רלוונטיים לסוג השאלה: החזר מחרוזת ריקה או מערך ריק.`;
+- שדות שאינם רלוונטיים לסוג השאלה: החזר מחרוזת ריקה או מערך ריק.${groundingRules}`;
 }
 
-function buildUserPrompt(type, count) {
+function buildUserPrompt(type, count, grounded) {
   const recent = state.usedQuestions.slice(-60);
   const avoidBlock = recent.length
     ? `\n\nאל תחזור על שאלות דומות לאלה שכבר נשאלו:\n- ${recent.join("\n- ")}`
@@ -137,41 +153,102 @@ function buildUserPrompt(type, count) {
     hot: `צור ${count} שאלות זוגיות אינטימיות ברמה שהוגדרה — שאלות שיחה פתוחות, רומנטיות, מסקרנות ומכבדות על הקשר, המשיכה והזוגיות. בלי צורך בתשובה עובדתית. השאירו answer, fact, clues, options ריקים.`,
   };
 
-  return perType[type] + avoidBlock;
+  const groundedSuffix = grounded ? `
+
+חפש ברשת כדי לאמת את העובדות וצרף אסמכתאות. בסיום, החזר אך ורק אובייקט JSON תקין במבנה:
+{"questions":[{"question":"...","answer":"...","fact":"...","category":"...","clues":[],"options":[],"sources":[{"title":"...","url":"..."}]}]}
+בלי שום טקסט לפני או אחרי ה-JSON.` : "";
+
+  return perType[type] + avoidBlock + groundedSuffix;
+}
+
+/* סוגי משחקונים שדורשים עובדות מאומתות (ולכן אימות אסמכתאות ברשת) */
+const FACTUAL_TYPES = ["head2head", "closest", "truefalse", "clues"];
+
+async function callClaude(body, timeoutMs = 120000) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), timeoutMs);
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "x-api-key": state.apiKey,
+        "anthropic-version": "2023-06-01",
+        "anthropic-dangerous-direct-browser-access": "true",
+      },
+      body: JSON.stringify(body),
+      signal: ctrl.signal,
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err?.error?.message || `שגיאת API (${res.status})`);
+    }
+    return await res.json();
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+/* חילוץ JSON גם כשהמודל עוטף אותו בטקסט */
+function extractJSON(text) {
+  try { return JSON.parse(text); } catch (e) { /* ננסה לחלץ */ }
+  const fenced = text.match(/```json\s*([\s\S]*?)```/);
+  if (fenced) { try { return JSON.parse(fenced[1]); } catch (e) { /* ממשיכים */ } }
+  const start = text.indexOf("{");
+  const end = text.lastIndexOf("}");
+  if (start >= 0 && end > start) return JSON.parse(text.slice(start, end + 1));
+  throw new Error("פורמט תשובה לא תקין");
 }
 
 async function generateAIQuestions(type, count) {
-  const res = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: {
-      "content-type": "application/json",
-      "x-api-key": state.apiKey,
-      "anthropic-version": "2023-06-01",
-      "anthropic-dangerous-direct-browser-access": "true",
-    },
-    body: JSON.stringify({
-      model: "claude-opus-4-8",
-      max_tokens: 4096,
-      system: buildSystemPrompt(),
-      output_config: {
-        effort: "medium",
-        format: { type: "json_schema", schema: AI_SCHEMA },
-      },
-      messages: [{ role: "user", content: buildUserPrompt(type, count) }],
-    }),
-  });
+  // אימות אסמכתאות: רק לשאלות עובדתיות, וכשהמצב מופעל
+  const grounded = state.grounding && FACTUAL_TYPES.includes(type);
 
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err?.error?.message || `שגיאת API (${res.status})`);
+  const body = {
+    model: "claude-opus-4-8",
+    system: buildSystemPrompt(grounded),
+    messages: [{ role: "user", content: buildUserPrompt(type, count, grounded) }],
+  };
+
+  let data;
+  if (grounded) {
+    // מצב מבוסס-אסמכתאות: Claude מחפש ברשת ומאמת כל עובדה לפני שהיא הופכת לשאלה
+    body.max_tokens = 8000;
+    body.tools = [{ type: "web_search_20260209", name: "web_search", max_uses: 6 }];
+    data = await callClaude(body);
+    // אם לולאת החיפוש נעצרה באמצע — ממשיכים אותה
+    let hops = 0;
+    while (data.stop_reason === "pause_turn" && hops++ < 3) {
+      body.messages = [body.messages[0], { role: "assistant", content: data.content }];
+      data = await callClaude(body);
+    }
+  } else {
+    // מצב מהיר: פלט JSON מובנה בלי חיפוש
+    body.max_tokens = 4096;
+    body.output_config = { effort: "medium", format: { type: "json_schema", schema: AI_SCHEMA } };
+    data = await callClaude(body);
   }
 
-  const data = await res.json();
   if (data.stop_reason === "refusal") throw new Error("Claude סירב לבקשה הזו");
-  const text = data.content.find(b => b.type === "text")?.text || "{}";
-  const parsed = JSON.parse(text);
+  const text = data.content.filter(b => b.type === "text").map(b => b.text).join("\n");
+  const parsed = extractJSON(text);
   if (!parsed.questions?.length) throw new Error("לא התקבלו שאלות");
   return parsed.questions;
+}
+
+/* ---------- הכנת הסבב הבא ברקע (שאלות בלי סוף, בלי המתנה) ---------- */
+
+const prefetchCache = {};   // type -> questions[]
+const prefetching = {};
+
+function schedulePrefetch(type) {
+  if (!state.apiKey || prefetching[type] || prefetchCache[type]?.length) return;
+  prefetching[type] = true;
+  generateAIQuestions(type, QUESTIONS_PER_ROUND)
+    .then(qs => { prefetchCache[type] = qs; })
+    .catch(e => console.warn("prefetch failed:", e))
+    .finally(() => { prefetching[type] = false; });
 }
 
 /* ---------- שליפת שאלות (AI עם נפילה למאגר) ---------- */
@@ -186,6 +263,12 @@ function getFallbackQuestions(type, count) {
 
 async function getQuestions(type, count) {
   if (state.apiKey) {
+    // אם הסבב הבא כבר הוכן ברקע — משתמשים בו מיד
+    if (prefetchCache[type]?.length >= count) {
+      const qs = prefetchCache[type];
+      delete prefetchCache[type];
+      return qs;
+    }
     try {
       return await generateAIQuestions(type, count);
     } catch (e) {
@@ -226,20 +309,28 @@ function renderMenu() {
     grid.appendChild(card);
   });
 
-  $("ai-status").textContent = state.apiKey
-    ? "🤖 מאגר אינסופי פעיל — Claude יוצר שאלות חדשות בכל סבב"
-    : "📚 משחקים מהמאגר המובנה. הוסיפו מפתח API בהגדרות למאגר אינסופי.";
+  $("ai-status").textContent = !state.apiKey
+    ? "📚 משחקים מהמאגר המובנה. הוסיפו מפתח API בהגדרות למאגר אינסופי."
+    : state.grounding
+      ? "🌐 מאגר אינסופי + אימות אסמכתאות — Claude מחפש ברשת ומאמת כל עובדה עם מקורות"
+      : "🤖 מאגר אינסופי פעיל — Claude יוצר שאלות חדשות בכל סבב";
   show("screen-menu");
 }
 
 async function startRound(type) {
-  $("loading-text").textContent = state.apiKey
-    ? "Claude רוקח שאלות טריות בשבילכם... 🧪"
-    : "מערבבים את הקלפים... 🃏";
+  const grounded = state.grounding && FACTUAL_TYPES.includes(type);
+  $("loading-text").textContent = !state.apiKey
+    ? "מערבבים את הקלפים... 🃏"
+    : grounded
+      ? "Claude מחפש ומאמת אסמכתאות ברשת... 🌐 (שווה את ההמתנה)"
+      : "Claude רוקח שאלות טריות בשבילכם... 🧪";
   $("loading").classList.remove("hidden");
 
   const questions = await getQuestions(type, QUESTIONS_PER_ROUND);
   $("loading").classList.add("hidden");
+
+  // מכינים את הסבב הבא ברקע — כדי שהשאלות אף פעם לא ייגמרו
+  schedulePrefetch(type);
 
   round = {
     type,
@@ -279,7 +370,7 @@ function renderQuestion() {
     : `שאלה ${round.idx + 1} מתוך ${round.questions.length}`;
 
   // איפוס תצוגה
-  ["q-clues", "q-options", "q-answer", "q-fact"].forEach(id => {
+  ["q-clues", "q-options", "q-answer", "q-fact", "q-sources"].forEach(id => {
     $(id).classList.add("hidden");
     $(id).innerHTML = "";
   });
@@ -381,7 +472,7 @@ function renderQuestion() {
   speak(speakText);
 }
 
-/* חשיפת תשובה + עובדה */
+/* חשיפת תשובה + עובדה + אסמכתאות */
 function revealAnswer(q) {
   if (q.answer) {
     $("q-answer").textContent = q.answer;
@@ -390,6 +481,24 @@ function revealAnswer(q) {
   if (q.fact) {
     $("q-fact").textContent = q.fact;
     $("q-fact").classList.remove("hidden");
+  }
+  if (Array.isArray(q.sources) && q.sources.length) {
+    const wrap = $("q-sources");
+    wrap.innerHTML = "";
+    const label = document.createElement("span");
+    label.className = "src-label";
+    label.textContent = "📚 אסמכתאות:";
+    wrap.appendChild(label);
+    q.sources.slice(0, 3).forEach(s => {
+      if (!s?.url) return;
+      const a = document.createElement("a");
+      a.href = s.url;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      a.textContent = "🔗 " + (s.title || s.url);
+      wrap.appendChild(a);
+    });
+    wrap.classList.remove("hidden");
   }
   speak(`התשובה: ${q.answer || ""}. ${q.fact || ""}`);
 }
@@ -554,11 +663,13 @@ $("btn-tts").onclick = () => {
 $("btn-settings").onclick = () => {
   $("set-apikey").value = state.apiKey;
   $("set-tts").checked = state.tts;
+  $("set-grounding").checked = state.grounding;
   $("dlg-settings").showModal();
 };
 $("set-save").onclick = () => {
   state.apiKey = $("set-apikey").value.trim();
   state.tts = $("set-tts").checked;
+  state.grounding = $("set-grounding").checked;
   saveState();
   $("dlg-settings").close();
   renderMenu();

@@ -207,6 +207,26 @@ input:focus, select:focus { outline: 2px solid var(--accent); }
 }
 .q-fact::before { content: "💡 "; }
 
+.q-sources {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: #0e1c30;
+  border-radius: 12px;
+  padding: 10px 14px;
+  border-right: 4px solid var(--accent2);
+}
+.q-sources .src-label { color: var(--muted); font-size: .8rem; font-weight: 700; }
+.q-sources a {
+  color: var(--accent);
+  font-size: .85rem;
+  text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.q-sources a:hover { text-decoration: underline; }
+
 /* ---- כפתורי פעולה ---- */
 .actions {
   margin-top: 14px;
