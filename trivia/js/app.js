@@ -26,6 +26,7 @@ let state = {
   apiKey: "",
   scores: { p1: 0, p2: 0, team: 0 },
   shownIds: {},            // qid -> חותמת זמן הצגה אחרונה
+  recentQuestions: [],     // טקסטים של שאלות שהוצגו — נשלח לסוכן נגד חזרות
   aiPool: {},              // qtype -> שאלות AI מאושרות (תור לא-מקוון)
   usedPrizes: [],
   roundsPlayed: 0,
@@ -49,12 +50,12 @@ function toast(msg, ms = 3200) {
 }
 
 function saveState() {
-  const { players, settings, apiKey, scores, shownIds, aiPool, usedPrizes, roundsPlayed,
+  const { players, settings, apiKey, scores, shownIds, recentQuestions, aiPool, usedPrizes, roundsPlayed,
           transitionsShown, lastTransitionKind, factsShown, metrics } = state;
   const roundInProgress = round && !round.isTiebreak && round.idx < round.questions.length;
   const savedRound = roundInProgress ? serializeRound(round) : state.savedRound;
   localStorage.setItem(LS_KEY, JSON.stringify({
-    players, settings, apiKey, scores, shownIds, aiPool, usedPrizes, roundsPlayed,
+    players, settings, apiKey, scores, shownIds, recentQuestions, aiPool, usedPrizes, roundsPlayed,
     transitionsShown, lastTransitionKind, factsShown, metrics, savedRound,
   }));
 }
@@ -188,9 +189,13 @@ ${blocked.length ? `- נושאים שהמשתתפים חסמו — אסור בה
 }
 
 function buildUserPrompt(type, count, grounded) {
-  const recentIds = Object.keys(state.shownIds).length;
-  const recentQs = [...new Set(Object.values(state.aiPool).flat().map(q => q.question).filter(Boolean))].slice(-40);
-  const avoidBlock = recentQs.length ? `\n\nאל תיצור שאלות דומות לאלה (${recentIds} כבר הוצגו):\n- ${recentQs.join("\n- ")}` : "";
+  // היסטוריה כפולה: מה שכבר הוצג למשתתפים + מה שממתין בתור — כדי שלא ייווצרו דומות
+  const shown = (state.recentQuestions || []).slice(-80);
+  const queued = [...new Set(Object.values(state.aiPool).flat().map(q => q.question || q.answer).filter(Boolean))].slice(-40);
+  const avoid = [...new Set([...shown, ...queued])];
+  const avoidBlock = avoid.length
+    ? `\n\nחשוב מאוד — אל תיצור שאלות זהות או דומות (גם לא בניסוח שונה) לשאלות האלה שכבר בשימוש:\n- ${avoid.join("\n- ")}`
+    : "";
   const perType = {
     head2head: `צור ${count} שאלות טריוויה קלאסיות (שאלה + תשובה עובדתית קצרה + עובדה מעניינת). clues ו-options ריקים.`,
     closest: `צור ${count} שאלות אומדן מספריות — התשובה מספר מנוסח בקצרה (למשל "8,849 מטר"). clues ו-options ריקים.`,
@@ -271,17 +276,9 @@ async function generateAIQuestions(type, count) {
   return parsed.questions;
 }
 
-/* מילוי תור התוכן ברקע — כדי שלסיבוב הבא לא יחכו */
-const prefetching = {};
-function schedulePrefetch(type) {
-  if (!state.apiKey || !type || prefetching[type]) return;
-  if (Engine.poolGet(type).length >= QUESTIONS_PER_ROUND) return;
-  prefetching[type] = true;
-  generateAIQuestions(type, QUESTIONS_PER_ROUND)
-    .then(qs => Engine.poolAdd(type, qs))
-    .catch(e => console.warn("prefetch failed:", e))
-    .finally(() => { prefetching[type] = false; });
-}
+/* מילוי התור נעשה על ידי סוכן התוכן (js/agent.js) שרץ ברקע כל הזמן.
+   כאן רק נותנים לו דחיפה מיידית כשמתחיל סיבוב. */
+function schedulePrefetch() { Agent.tick(); }
 
 /* ---------- תפריט ---------- */
 
@@ -340,12 +337,8 @@ function renderMenu() {
   // באנר המשך משחק שמור
   $("resume-banner").classList.toggle("hidden", !state.savedRound);
 
-  $("ai-status").textContent = !state.apiKey
-    ? "📚 מאגר מובנה + תור תוכן מקומי. הוסיפו מפתח API בהגדרות למאגר אינסופי."
-    : state.settings.grounding
-      ? "🌐 מאגר אינסופי + אימות אסמכתאות פעיל"
-      : "🤖 מאגר אינסופי פעיל";
   show("screen-menu");
+  Agent.status();
 }
 
 /* ---------- התחלת סיבוב ---------- */
@@ -958,6 +951,7 @@ function collectSetup(useDefaults) {
   }
   saveState();
   renderMenu();
+  if (state.apiKey) Agent.start();
 }
 
 $("btn-start").onclick = () => collectSetup(false);
@@ -1030,7 +1024,8 @@ $("set-save").onclick = () => {
   saveState();
   $("dlg-settings").close();
   renderMenu();
-  toast("נשמר ✅");
+  if (state.apiKey) { Agent.start(); toast("נשמר ✅ — סוכן השאלות יצא לעבודה 🤖"); }
+  else { Agent.stop(); toast("נשמר ✅"); }
 };
 $("set-close").onclick = () => $("dlg-settings").close();
 $("set-profile").onclick = () => { $("dlg-settings").close(); fillSetupForm(); show("screen-setup"); };
@@ -1076,3 +1071,5 @@ if (state.players) {
   updateDriverLabels();
   show("screen-setup");
 }
+Agent.start(); // סוכן התוכן — רץ ברקע כל עוד יש מפתח API
+window.addEventListener("online", () => Agent.tick());
