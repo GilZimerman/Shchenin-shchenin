@@ -8,49 +8,77 @@
 </head>
 <body>
 
-<!-- ===== מסך פתיחה / הגדרות פרופיל ===== -->
+<!-- ===== מסך היכרות: פרופיל נפרד לכל משתתף ===== -->
 <section id="screen-setup" class="screen">
   <div class="card setup-card">
     <h1>🚗 טריוויה בדרכים</h1>
-    <p class="subtitle">משחק טריוויה זוגי לנסיעה — עם מאגר שאלות אינסופי מבוסס AI</p>
+    <p class="subtitle">המנחה האישי שלכם לדרך — לומד אתכם משאלה לשאלה</p>
 
-    <div class="form-grid">
-      <label>שם משתתף/ת 1 <input id="inp-p1" type="text" value="גיל"></label>
-      <label>שם משתתף/ת 2 <input id="inp-p2" type="text" value="אניה"></label>
+    <div class="player-forms">
+      <div class="player-form p1-form">
+        <h3>🟢 משתתף/ת 1</h3>
+        <label>שם או כינוי <input id="inp-p1-name" type="text" value="גיל"></label>
+        <label>נושאים אהובים <input id="inp-p1-topics" type="text" value="מכוניות, ספורט, מכבי חיפה, מוזיקה"></label>
+        <label>רמת קושי
+          <select id="inp-p1-diff">
+            <option value="easy">קלילה</option>
+            <option value="varied" selected>מגוונת</option>
+            <option value="hard">מאתגרת</option>
+          </select>
+        </label>
+        <label>סגנון הומור
+          <select id="inp-p1-humor">
+            <option value="שנון" selected>שנון</option>
+            <option value="עדין">עדין וחם</option>
+            <option value="יבש">יבש וסרקסטי-קליל</option>
+          </select>
+        </label>
+        <label>נושאים רגישים (לא להציג) <input id="inp-p1-avoid" type="text" placeholder="לא חובה"></label>
+      </div>
 
+      <div class="player-form p2-form">
+        <h3>🟡 משתתף/ת 2</h3>
+        <label>שם או כינוי <input id="inp-p2-name" type="text" value="אניה"></label>
+        <label>נושאים אהובים <input id="inp-p2-topics" type="text" value="אופנה, תרבות, מוזיקה, גיאוגרפיה"></label>
+        <label>רמת קושי
+          <select id="inp-p2-diff">
+            <option value="easy">קלילה</option>
+            <option value="varied" selected>מגוונת</option>
+            <option value="hard">מאתגרת</option>
+          </select>
+        </label>
+        <label>סגנון הומור
+          <select id="inp-p2-humor">
+            <option value="שנון" selected>שנון</option>
+            <option value="עדין">עדין וחם</option>
+            <option value="יבש">יבש וסרקסטי-קליל</option>
+          </select>
+        </label>
+        <label>נושאים רגישים (לא להציג) <input id="inp-p2-avoid" type="text" placeholder="לא חובה"></label>
+      </div>
+    </div>
+
+    <div class="form-grid shared-form">
       <label>מי נוהג/ת עכשיו?
         <select id="inp-driver">
-          <option value="p2" selected>אניה</option>
-          <option value="p1">גיל</option>
-          <option value="none">אף אחד (חניה/הפסקה)</option>
+          <option value="p2" selected>משתתף/ת 2</option>
+          <option value="p1">משתתף/ת 1</option>
+          <option value="none">אף אחד (חניה)</option>
         </select>
       </label>
-
-      <label>כמה שנים יחד? <input id="inp-years" type="number" value="6" min="0"></label>
-
-      <label class="full">נושאים אהובים (מופרדים בפסיק)
-        <input id="inp-topics" type="text" value="ידע כללי, מכוניות, אופנה, ספורט, מכבי חיפה, גיאוגרפיה, תרבות, מוזיקה, קולנוע, אוכל, מדע">
-      </label>
-
-      <label class="full">נושאים שפחות מעניינים
-        <input id="inp-avoid" type="text" value="כלכלה, פוליטיקה, דת, שוק ההון, השקעות">
-      </label>
-
-      <label>רמת קושי
-        <select id="inp-difficulty">
-          <option value="light">קלילה</option>
-          <option value="varied" selected>מגוונת (לא מאתגרת מדי)</option>
-          <option value="hard">מאתגרת</option>
+      <label>קטעי מעבר בין שאלות
+        <select id="inp-transitions">
+          <option value="few">מעט</option>
+          <option value="balanced" selected>מאוזן</option>
+          <option value="many">הרבה</option>
         </select>
       </label>
-
       <label>שאלות אינטימיות?
         <select id="inp-intimacy">
-          <option value="on" selected>כן — באלגנטיות ובתבונה</option>
+          <option value="on" selected>כן, באלגנטיות</option>
           <option value="off">לא, תודה</option>
         </select>
       </label>
-
       <label>רמת נועזות
         <select id="inp-intimacy-level">
           <option value="flirty">פלרטטנית</option>
@@ -62,27 +90,54 @@
 
     <details class="api-box">
       <summary>🤖 מאגר שאלות אינסופי (Claude API)</summary>
-      <p>הדביקו מפתח API של Anthropic כדי ש-Claude ייצור שאלות חדשות ומותאמות אישית בלי סוף. בלי מפתח — המשחק ישתמש במאגר המובנה.</p>
+      <p>הדביקו מפתח API של Anthropic כדי ש-Claude ייצור שאלות חדשות ומאומתות בלי סוף. בלי מפתח — המשחק משתמש במאגר המובנה ובתור התוכן המקומי.</p>
       <input id="inp-apikey" type="password" placeholder="sk-ant-...">
-      <p class="hint">המפתח נשמר רק בדפדפן שלכם (localStorage) ונשלח ישירות ל-Anthropic בלבד. מומלץ מפתח עם מגבלת תקציב.</p>
+      <p class="hint">המפתח נשמר רק בדפדפן שלכם ונשלח ישירות ל-Anthropic בלבד.</p>
     </details>
 
     <button id="btn-start" class="btn primary big">יאללה, מתחילים! 🎉</button>
+    <button id="btn-skip-setup" class="btn big ghost">דלגו על ההיכרות — נלמד אתכם תוך כדי משחק ⏩</button>
   </div>
 </section>
 
-<!-- ===== תפריט משחקונים ===== -->
+<!-- ===== תפריט ===== -->
 <section id="screen-menu" class="screen hidden">
   <header class="topbar">
     <div class="scorebox" id="scorebox-menu"></div>
     <div class="topbar-btns">
+      <button id="btn-learned" class="btn icon" title="מה המשחק למד עלינו?">🧠</button>
       <button id="btn-tts" class="btn icon" title="הקראה קולית">🔊</button>
       <button id="btn-settings" class="btn icon" title="הגדרות">⚙️</button>
     </div>
   </header>
 
-  <h2 class="menu-title">בוחרים משחקון 🎯</h2>
+  <div id="resume-banner" class="resume-banner hidden">
+    <span>יש לכם סיבוב שנקטע באמצע 🎯</span>
+    <div class="resume-btns">
+      <button id="btn-resume" class="btn primary">להמשיך מאיפה שהפסקתם</button>
+      <button id="btn-discard-resume" class="btn small">לוותר</button>
+    </div>
+  </div>
+
   <p class="menu-sub" id="menu-greeting"></p>
+  <p class="menu-learning" id="menu-learning"></p>
+
+  <div class="mode-bar">
+    <div class="chip-group" id="scoring-chips">
+      <button class="chip active" data-scoring="comp">🏆 תחרותי</button>
+      <button class="chip" data-scoring="coop">🤝 שיתופי</button>
+    </div>
+    <div class="chip-group" id="length-chips">
+      <button class="chip" data-len="short">קצר</button>
+      <button class="chip active" data-len="medium">בינוני</button>
+      <button class="chip" data-len="long">ארוך</button>
+    </div>
+  </div>
+
+  <h2 class="menu-title">מצבי משחק חכמים ✨</h2>
+  <div id="mode-grid" class="game-grid modes"></div>
+
+  <h2 class="menu-title">או משחקון אחד לבחירתכם 🎯</h2>
   <div id="game-grid" class="game-grid"></div>
   <p class="ai-status" id="ai-status"></p>
 </section>
@@ -99,6 +154,15 @@
     <span id="q-counter" class="counter"></span>
   </div>
 
+  <div id="q-transition" class="q-transition hidden"></div>
+  <div id="comeback-offer" class="comeback hidden">
+    <p id="comeback-text"></p>
+    <div class="actions">
+      <button id="btn-comeback-yes" class="btn warn">מאשרים! נקודה כפולה 🔥</button>
+      <button id="btn-comeback-no" class="btn">ממשיכים רגיל</button>
+    </div>
+  </div>
+
   <div class="card q-card">
     <div id="q-target" class="q-target"></div>
     <div id="q-category" class="q-category"></div>
@@ -110,30 +174,43 @@
     <div id="q-sources" class="q-sources hidden"></div>
   </div>
 
+  <div id="feedback-bar" class="feedback-bar hidden">
+    <button class="chip" data-fb="like">👍 אהבנו</button>
+    <button class="chip" data-fb="less">👎 פחות בשבילנו</button>
+    <button class="chip" data-fb="more">➕ עוד כאלה</button>
+    <button class="chip" data-fb="harder">🔺 קשה יותר</button>
+    <button class="chip" data-fb="easier">🔻 קל יותר</button>
+    <button class="chip" data-fb="block">🚫 בלי הנושא הזה</button>
+  </div>
+
   <div id="game-actions" class="actions"></div>
 </section>
 
-<!-- ===== מסך סיום סבב ===== -->
+<!-- ===== סיום סיבוב ===== -->
 <section id="screen-result" class="screen hidden">
   <div class="card result-card">
     <div id="result-emoji" class="result-emoji">🏆</div>
     <h2 id="result-title"></h2>
     <p id="result-score" class="result-score"></p>
+    <div id="result-highlights" class="highlights"></div>
     <div class="prize-box">
       <h3>🎁 הפרס</h3>
       <p id="result-prize"></p>
     </div>
+    <p id="result-learning" class="result-learning"></p>
+    <p id="result-suggestion" class="result-suggestion"></p>
     <div class="result-btns">
-      <button id="btn-again" class="btn primary">עוד סבב באותו משחקון 🔄</button>
-      <button id="btn-menu" class="btn">משחקון אחר 🎯</button>
+      <button id="btn-suggested" class="btn warn hidden"></button>
+      <button id="btn-again" class="btn primary">עוד סיבוב כזה 🔄</button>
+      <button id="btn-menu" class="btn">לתפריט 🎯</button>
     </div>
   </div>
 </section>
 
-<!-- ===== מסך טעינה ===== -->
+<!-- ===== טעינה ===== -->
 <div id="loading" class="loading hidden">
   <div class="spinner"></div>
-  <p id="loading-text">Claude רוקח שאלות טריות בשבילכם... 🧪</p>
+  <p id="loading-text">רגע...</p>
 </div>
 
 <!-- ===== הגדרות ===== -->
@@ -143,17 +220,59 @@
     <input id="set-apikey" type="password" placeholder="sk-ant-...">
   </label>
   <label class="row"><input id="set-tts" type="checkbox"> הקראת שאלות בקול (לנהיגה בטוחה)</label>
-  <label class="row"><input id="set-grounding" type="checkbox"> 🌐 אימות עובדות עם אסמכתאות מהרשת (איטי יותר, אמין יותר)</label>
+  <label class="row"><input id="set-grounding" type="checkbox"> 🌐 אימות עובדות עם אסמכתאות מהרשת</label>
+  <label>תדירות קטעי מעבר
+    <select id="set-transitions">
+      <option value="few">מעט</option>
+      <option value="balanced">מאוזן</option>
+      <option value="many">הרבה</option>
+    </select>
+  </label>
   <div class="dlg-btns">
     <button id="set-save" class="btn primary">שמירה</button>
-    <button id="set-reset" class="btn danger">איפוס ניקוד ומשחק</button>
+    <button id="set-profile" class="btn">עריכת פרופילים 👥</button>
+    <button id="set-reset" class="btn danger">איפוס ניקוד</button>
     <button id="set-close" class="btn">סגירה</button>
+  </div>
+</dialog>
+
+<!-- ===== מה המשחק למד עלינו? ===== -->
+<dialog id="dlg-learned">
+  <h3>🧠 מה המשחק למד עלינו?</h3>
+  <div id="learned-content"></div>
+  <details class="privacy-note">
+    <summary>🔒 פרטיות — מה נשמר ולמה</summary>
+    <p>כל ההעדפות, הניקוד וההיסטוריה נשמרים <b>רק בדפדפן במכשיר הזה</b> (localStorage) — אין שרת ואין חשבון.
+    המידע משמש אך ורק להתאמת השאלות והקושי עבורכם.
+    אם הזנתם מפתח API, תוכן הבקשות נשלח ישירות ל-Anthropic לצורך יצירת שאלות בלבד — תשובות אישיות ואינטימיות שלכם לא נשלחות ולא משמשות לאימון מודלים.
+    אפשר לכבות את הלמידה, לאפס אותה או למחוק הכול — כאן למטה.</p>
+  </details>
+  <div class="dlg-btns">
+    <label class="row"><input id="learn-enabled" type="checkbox"> למידה והתאמה אישית פעילה</label>
+    <button id="learn-reset" class="btn warn">איפוס הלמידה (הפרופילים נשארים)</button>
+    <button id="learn-wipe" class="btn danger">מחיקת כל הנתונים</button>
+    <button id="learn-close" class="btn">סגירה</button>
+  </div>
+</dialog>
+
+<!-- ===== אישור מצב למבוגרים ===== -->
+<dialog id="dlg-adult">
+  <h3>🔞 מצב למבוגרים</h3>
+  <p>מצב עם דגש על שאלות אינטימיות ברמה שבחרתם. נדרש אישור של שני המשתתפים — ואפשר לומר "עוברים" על כל שאלה.</p>
+  <label class="row"><input id="adult-ok-1" type="checkbox"> <span id="adult-name-1"></span></label>
+  <label class="row"><input id="adult-ok-2" type="checkbox"> <span id="adult-name-2"></span></label>
+  <div class="dlg-btns">
+    <button id="adult-go" class="btn pink" disabled>מאשרים — קדימה 🔥</button>
+    <button id="adult-cancel" class="btn">ביטול</button>
   </div>
 </dialog>
 
 <div id="toast" class="toast hidden"></div>
 
 <script src="js/questions.js"></script>
+<script src="js/templates.js"></script>
+<script src="js/learning.js"></script>
+<script src="js/engine.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>
