@@ -21,6 +21,11 @@ const Engine = {
 
   markShown(q) {
     state.shownIds[Engine.qid(q)] = Date.now();
+    // היסטוריית טקסטים — נשלחת לסוכן ה-AI כדי שלא ייצר שאלות דומות
+    const text = q.question || q.answer || (q.options || []).join(" / ");
+    if (text) {
+      state.recentQuestions = [...(state.recentQuestions || []).filter(t => t !== text), text].slice(-120);
+    }
     // גיזום רשומות ישנות
     const ids = Object.entries(state.shownIds);
     if (ids.length > 400) {
@@ -51,14 +56,18 @@ const Engine = {
     return shuffle(fresh).slice(0, n);
   },
 
-  /* --- שליפה מהמאגר המובנה --- */
+  /* --- שליפה מהמאגר המובנה ---
+     קודם שאלות שלא הוצגו לאחרונה; אם המאגר מוצה — משלימים מהישנות ביותר
+     (ולא באקראי), כך שחזרה קורית רק אחרי שכל השאר נוצלו. */
   fromBank(qtype, n, exclude) {
     const bank = FALLBACK_BANK[qtype] || [];
     const excludeIds = new Set((exclude || []).map(Engine.qid));
-    let fresh = bank.filter(q => !Engine.wasShownRecently(q) && !Engine.isBlocked(q) && !excludeIds.has(Engine.qid(q)));
-    if (fresh.length < n) fresh = bank.filter(q => !Engine.isBlocked(q) && !excludeIds.has(Engine.qid(q)));
-    if (fresh.length < n) fresh = bank;
-    return shuffle(fresh).slice(0, n);
+    const usable = bank.filter(q => !Engine.isBlocked(q) && !excludeIds.has(Engine.qid(q)));
+    const fresh = shuffle(usable.filter(q => !Engine.wasShownRecently(q)));
+    if (fresh.length >= n) return fresh.slice(0, n);
+    const stale = usable.filter(q => Engine.wasShownRecently(q))
+      .sort((a, b) => (state.shownIds[Engine.qid(a)] || 0) - (state.shownIds[Engine.qid(b)] || 0));
+    return [...fresh, ...stale].slice(0, n);
   },
 
   /* שליפת n פריטים מסוג — קודם תור AI, אחר כך מאגר */
