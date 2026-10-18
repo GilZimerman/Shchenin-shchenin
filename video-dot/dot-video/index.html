@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="he">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1420" />
+    <script src="vendor/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "Heebo";
+        src: url("fonts/heebo-hebrew-wght-normal.woff2") format("woff2");
+        font-weight: 100 900;
+        unicode-range: U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F;
+      }
+      @font-face {
+        font-family: "Heebo";
+        src: url("fonts/heebo-latin-wght-normal.woff2") format("woff2");
+        font-weight: 100 900;
+        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2122;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        overflow: hidden;
+        background: #000;
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        background: #000;
+        font-family: "Heebo", sans-serif;
+        color: #fff;
+        overflow: hidden;
+      }
+      /* Layout mirrors the 400x296 original, scaled 4.8x */
+      .layer {
+        position: absolute;
+        inset: 0;
+      }
+      #title {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 77px;
+        direction: rtl;
+        text-align: center;
+        font-size: 154px;
+        font-weight: 500;
+        line-height: 187px;
+      }
+      #title .line {
+        display: block;
+      }
+      #dot {
+        position: absolute;
+        left: 938px;
+        top: 574px;
+        width: 168px;
+        height: 168px;
+        border-radius: 50%;
+        background: #fff;
+        box-shadow: 0 0 6px rgba(255, 255, 255, 0.35);
+      }
+      .num {
+        position: absolute;
+        left: 48px;
+        top: 112px;
+        font-size: 134px;
+        font-weight: 500;
+        line-height: 184px;
+        font-variant-numeric: tabular-nums;
+        opacity: 0;
+      }
+      #thanks {
+        position: absolute;
+        left: 708px;
+        width: 700px;
+        top: 805px;
+        direction: rtl;
+        text-align: center;
+        font-size: 154px;
+        font-weight: 500;
+        line-height: 187px;
+      }
+      #thanks .line {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="26.05"
+      data-width="1920"
+      data-height="1420"
+    >
+      <div id="title-clip" class="clip layer" data-start="0" data-duration="4.6" data-track-index="0">
+        <div id="title">
+          <span class="line">הסתכלו היטב במשך 10</span>
+          <span class="line">שניות על הנקודה הלבנה</span>
+        </div>
+      </div>
+
+      <div id="count-clip" class="clip layer" data-start="4.05" data-duration="18.0" data-track-index="1">
+        <div class="num" id="n10">10</div>
+        <div class="num" id="n9">9</div>
+        <div class="num" id="n8">8</div>
+        <div class="num" id="n7">7</div>
+        <div class="num" id="n6">6</div>
+        <div class="num" id="n5">5</div>
+        <div class="num" id="n4">4</div>
+        <div class="num" id="n3">3</div>
+        <div class="num" id="n2">2</div>
+        <div class="num" id="n1">1</div>
+      </div>
+
+      <div id="thanks-clip" class="clip layer" data-start="23.45" data-duration="2.6" data-track-index="2">
+        <div id="thanks">
+          <span class="line">תודה רבה</span>
+          <span class="line">ולהתראות</span>
+        </div>
+      </div>
+
+      <div id="dot-clip" class="clip layer" data-start="0" data-duration="26.05" data-track-index="3">
+        <div id="dot"></div>
+      </div>
+    </div>
+    <script>
+      const tl = gsap.timeline({ paused: true });
+
+      // Opening: title and dot fade up together
+      tl.fromTo("#title", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "none" }, 0.1);
+      tl.fromTo("#dot", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "none" }, 0.1);
+      tl.to("#title", { opacity: 0, duration: 0.4, ease: "none" }, 4.05);
+
+      // Countdown 10 -> 1, matching the original's ~1.775s per number
+      const START = 4.05;
+      const STEP = 1.775;
+      const FADE = 0.2;
+      [10, 9, 8, 7, 6, 5, 4, 3, 2, 1].forEach((n, i) => {
+        const t = START + i * STEP;
+        tl.fromTo(`#n${n}`, { opacity: 0 }, { opacity: 1, duration: FADE, ease: "none" }, t);
+        // crossfade: each number fades out while the next fades in
+        tl.to(`#n${n}`, { opacity: 0, duration: FADE, ease: "none" }, t + STEP);
+      });
+
+      // Closing message
+      tl.fromTo("#thanks", { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "power1.out" }, 23.45);
+
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
